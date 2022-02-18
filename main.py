@@ -519,6 +519,22 @@ class Main(QMainWindow):
         self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 440, 121, 21))
         self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
 
+        self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.centralwidget)
+        self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 560, 121, 21))
+        self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+
+        self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.centralwidget)
+        self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 630, 121, 21))
+        self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+
+        self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.centralwidget)
+        self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 710, 121, 21))
+        self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+
+        self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.centralwidget)
+        self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 780, 121, 21))
+        self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+
         def checkBox_Media_Video_DUP_Clicked():
             if self.ui.checkBox_Media_Video_DUP.isChecked():
                 self.ui.label_Media_Video_First_Dest.setText("First Destination:")
@@ -526,12 +542,32 @@ class Main(QMainWindow):
                 self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.show()
                 self.ui.label_Media_Video_Second_Colon.show()
                 self.ui.lineEdit_Media_Video_Second_Dest_Mcast_Port.show()
+                self.ui.label_Media_Audio_First_Dest.setText("First Destination:")
+                self.ui.label_Media_Audio_Second_Dest.show()
+                self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.show()
+                self.ui.label_Media_Audio_Second_Colon.show()
+                self.ui.lineEdit_Media_Audio_Second_Dest_Mcast_Port.show()
+                self.ui.label_Media_ANC_First_Dest.setText("First Destination:")
+                self.ui.label_Media_ANC_Second_Dest.show()
+                self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.show()
+                self.ui.label_Media_ANC_Second_Colon.show()
+                self.ui.lineEdit_Media_ANC_Second_Dest_Mcast_Port.show()
             else:
                 self.ui.label_Media_Video_First_Dest.setText("Destination:")
                 self.ui.label_Media_Video_Second_Dest.hide()
                 self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.hide()
                 self.ui.label_Media_Video_Second_Colon.hide()
                 self.ui.lineEdit_Media_Video_Second_Dest_Mcast_Port.hide()
+                self.ui.label_Media_Audio_First_Dest.setText("Destination:")
+                self.ui.label_Media_Audio_Second_Dest.hide()
+                self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.hide()
+                self.ui.label_Media_Audio_Second_Colon.hide()
+                self.ui.lineEdit_Media_Audio_Second_Dest_Mcast_Port.hide()
+                self.ui.label_Media_ANC_First_Dest.setText("Destination:")
+                self.ui.label_Media_ANC_Second_Dest.hide()
+                self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.hide()
+                self.ui.label_Media_ANC_Second_Colon.hide()
+                self.ui.lineEdit_Media_ANC_Second_Dest_Mcast_Port.hide()
 
         # A-Radio Button GROUP - Declare Variables for buttons in a group
         # A-1-Dir Model:
