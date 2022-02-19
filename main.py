@@ -387,7 +387,7 @@ def configSDP() -> bool:
         str_media_video_fmtp_value_height + DEFINE_NBSP + \
         DEFINE_SDPPARAM_VIDEO_FMTP_EXACTFR + \
         str_media_video_fmtp_value_exactframerate + DEFINE_NBSP + \
-        str_media_video_fmtp_value_interlace +\
+        str_media_video_fmtp_value_interlace + \
         DEFINE_SDPPARAM_VIDEO_FMTP_DEPTH + \
         str_media_video_fmtp_value_depth + DEFINE_NBSP + \
         DEFINE_SDPPARAM_VIDEO_FMTP_TCS + \
@@ -499,6 +499,53 @@ def configSDP() -> bool:
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_id_video_second)
 
     return True
+
+
+def refresh_audio_combobox():
+    int_audio_track_qty_already_used = 0
+    comboboxs_audio_format = [
+        MainWindow.ui.comboBox_Audio_Format_Ch1and2,
+        MainWindow.ui.comboBox_Audio_Format_Ch3and4,
+        MainWindow.ui.comboBox_Audio_Format_Ch5and6,
+        MainWindow.ui.comboBox_Audio_Format_Ch7and8
+    ]
+    comboboxs_audio_trackqty = [
+        MainWindow.ui.comboBox_Audio_Track_Qty_Ch1and2,
+        MainWindow.ui.comboBox_Audio_Track_Qty_Ch3and4,
+        MainWindow.ui.comboBox_Audio_Track_Qty_Ch5and6,
+        MainWindow.ui.comboBox_Audio_Track_Qty_Ch7and8
+    ]
+    comboboxs_audio_sample_size = [
+        MainWindow.ui.comboBox_Audio_Sample_Size_Ch1and2,
+        MainWindow.ui.comboBox_Audio_Sample_Size_Ch3and4,
+        MainWindow.ui.comboBox_Audio_Sample_Size_Ch5and6,
+        MainWindow.ui.comboBox_Audio_Sample_Size_Ch7and8
+    ]
+
+    for i in range(3):
+        if comboboxs_audio_format[i].currentIndex() == 0:  # if value is None
+            comboboxs_audio_trackqty[i].clear()
+            # comboboxs_audio_trackqty[i].setDisabled(True)
+            comboboxs_audio_sample_size[i].setDisabled(True)
+            for j in range(i + 1, 4):  # 下面行逐行清空值并失效
+                comboboxs_audio_format[j].setCurrentIndex(0)
+                comboboxs_audio_format[j].setDisabled(True)
+                comboboxs_audio_trackqty[j].clear()
+                comboboxs_audio_trackqty[j].setDisabled(True)
+                comboboxs_audio_sample_size[j].setDisabled(True)
+            break
+        elif comboboxs_audio_format[i].currentIndex() == 1:  # if value is PCM-ST
+            if comboboxs_audio_trackqty[i].count() == 0:
+                for k in range(2, 10-int_audio_track_qty_already_used, 2):
+                    comboboxs_audio_trackqty[i].addItem(str(k))
+                    comboboxs_audio_trackqty[i].setCurrentIndex(0)
+                    comboboxs_audio_trackqty[i].setEnabled(True)
+        if int_audio_track_qty_already_used < 8:
+            comboboxs_audio_format[i+1].setEnabled(True)
+        if comboboxs_audio_trackqty[i].currentText() != "":
+            int_audio_track_qty_already_used += int(comboboxs_audio_trackqty[i].currentText())
+
+    return
 
 
 class Main(QMainWindow):
@@ -726,7 +773,33 @@ class Main(QMainWindow):
             elif self.btngroup_tapchn.checkedId() == 1:
                 str_tap_channel = "B"
 
-        # C-Radio Button GROUP - Connect to SLot
+        # B-10-Slots for (audio) combobox on index change
+        def slot_combobox_indexchanged_audfmt_ch1and2():
+            print("in slot audfmtch1")
+            refresh_audio_combobox()
+
+        def slot_combobox_indexchanged_audfmt_ch3and4():
+            refresh_audio_combobox()
+
+        def slot_combobox_indexchanged_audfmt_ch5and6():
+            refresh_audio_combobox()
+
+        def slot_combobox_indexchanged_audfmt_ch7and8():
+            refresh_audio_combobox()
+
+        def slot_combobox_indexchanged_trackqty_ch1and2():
+            refresh_audio_combobox()
+
+        def slot_combobox_indexchanged_trackqty_ch3and4():
+            refresh_audio_combobox()
+
+        def slot_combobox_indexchanged_trackqty_ch5and6():
+            refresh_audio_combobox()
+
+        def slot_combobox_indexchanged_trackqty_ch7and8():
+            refresh_audio_combobox()
+
+        # C-Connect to SLot
         # C-1-Dir Model:
         for i in range(len(self.radiobtns_dirmodel)):
             self.btngroup_dirmodel.addButton(self.radiobtns_dirmodel[i], i)
@@ -764,11 +837,23 @@ class Main(QMainWindow):
             self.btngroup_tapchn.addButton(self.radiobtns_tapchn[i], i)
             self.radiobtns_tapchn[i].clicked.connect(slot_radiobtn_clicked_tapchn)
 
-        # D-bind slot function
+        # C-10 single object
         self.ui.pushButton_GenSDP.clicked.connect(pushButton_GenSDP_Clicked)
         self.ui.checkBox_Media_Video_DUP.clicked.connect(checkBox_Media_Video_DUP_Clicked)
+        self.ui.comboBox_Audio_Format_Ch1and2.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch1and2)
+        self.ui.comboBox_Audio_Format_Ch3and4.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch3and4)
+        self.ui.comboBox_Audio_Format_Ch5and6.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch5and6)
+        self.ui.comboBox_Audio_Format_Ch7and8.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch7and8)
+        self.ui.comboBox_Audio_Track_Qty_Ch1and2.currentIndexChanged.connect(
+            slot_combobox_indexchanged_trackqty_ch1and2)
+        self.ui.comboBox_Audio_Track_Qty_Ch3and4.currentIndexChanged.connect(
+            slot_combobox_indexchanged_trackqty_ch3and4)
+        self.ui.comboBox_Audio_Track_Qty_Ch1and2.currentIndexChanged.connect(
+            slot_combobox_indexchanged_trackqty_ch5and6)
+        self.ui.comboBox_Audio_Track_Qty_Ch1and2.currentIndexChanged.connect(
+            slot_combobox_indexchanged_trackqty_ch7and8)
 
-        # F-init value for each radio button group
+        # D-init value for each radio button group
         checkBox_Media_Video_DUP_Clicked()
         slot_radiobtn_clicked_dirmodel()
         slot_radiobtn_clicked_res()

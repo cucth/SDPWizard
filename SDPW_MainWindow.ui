@@ -1225,6 +1225,14 @@
       <height>26</height>
      </rect>
     </property>
+    <property name="currentIndex">
+     <number>1</number>
+    </property>
+    <item>
+     <property name="text">
+      <string>None</string>
+     </property>
+    </item>
     <item>
      <property name="text">
       <string>PCM Stereo</string>
