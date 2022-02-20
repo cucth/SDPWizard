@@ -503,47 +503,52 @@ def configSDP() -> bool:
 
 def refresh_audio_combobox():
     int_audio_track_qty_already_used = 0
-    comboboxs_audio_format = [
+    comboboxes_audio_format = [
         MainWindow.ui.comboBox_Audio_Format_Ch1and2,
         MainWindow.ui.comboBox_Audio_Format_Ch3and4,
         MainWindow.ui.comboBox_Audio_Format_Ch5and6,
         MainWindow.ui.comboBox_Audio_Format_Ch7and8
     ]
-    comboboxs_audio_trackqty = [
+    comboboxes_audio_trackqty = [
         MainWindow.ui.comboBox_Audio_Track_Qty_Ch1and2,
         MainWindow.ui.comboBox_Audio_Track_Qty_Ch3and4,
         MainWindow.ui.comboBox_Audio_Track_Qty_Ch5and6,
         MainWindow.ui.comboBox_Audio_Track_Qty_Ch7and8
     ]
-    comboboxs_audio_sample_size = [
+    comboboxes_audio_sample_size = [
         MainWindow.ui.comboBox_Audio_Sample_Size_Ch1and2,
         MainWindow.ui.comboBox_Audio_Sample_Size_Ch3and4,
         MainWindow.ui.comboBox_Audio_Sample_Size_Ch5and6,
         MainWindow.ui.comboBox_Audio_Sample_Size_Ch7and8
     ]
 
-    for i in range(3):
-        if comboboxs_audio_format[i].currentIndex() == 0:  # if value is None
-            comboboxs_audio_trackqty[i].clear()
-            # comboboxs_audio_trackqty[i].setDisabled(True)
-            comboboxs_audio_sample_size[i].setDisabled(True)
+    for i in range(4):
+        if comboboxes_audio_format[i].currentIndex() == 0 and i < 3:  # if value is None
+            comboboxes_audio_trackqty[i].clear()
+            comboboxes_audio_trackqty[i].setDisabled(True)
+            comboboxes_audio_sample_size[i].setDisabled(True)
             for j in range(i + 1, 4):  # 下面行逐行清空值并失效
-                comboboxs_audio_format[j].setCurrentIndex(0)
-                comboboxs_audio_format[j].setDisabled(True)
-                comboboxs_audio_trackqty[j].clear()
-                comboboxs_audio_trackqty[j].setDisabled(True)
-                comboboxs_audio_sample_size[j].setDisabled(True)
+                comboboxes_audio_format[j].setCurrentIndex(0)
+                comboboxes_audio_format[j].setDisabled(True)
+                comboboxes_audio_trackqty[j].clear()
+                comboboxes_audio_trackqty[j].setDisabled(True)
+                comboboxes_audio_sample_size[j].setDisabled(True)
             break
-        elif comboboxs_audio_format[i].currentIndex() == 1:  # if value is PCM-ST
-            if comboboxs_audio_trackqty[i].count() == 0:
+        elif comboboxes_audio_format[i].currentIndex() == 0 and i == 3:  # if ch7&8 is None
+            comboboxes_audio_trackqty[i].clear()
+            comboboxes_audio_trackqty[i].setDisabled(True)
+            comboboxes_audio_sample_size[i].setDisabled(True)
+            break
+        elif comboboxes_audio_format[i].currentIndex() == 1:  # if value is PCM-ST
+            if comboboxes_audio_trackqty[i].count() == 0:
                 for k in range(2, 10-int_audio_track_qty_already_used, 2):
-                    comboboxs_audio_trackqty[i].addItem(str(k))
-                    comboboxs_audio_trackqty[i].setCurrentIndex(0)
-                    comboboxs_audio_trackqty[i].setEnabled(True)
-        if int_audio_track_qty_already_used < 8:
-            comboboxs_audio_format[i+1].setEnabled(True)
-        if comboboxs_audio_trackqty[i].currentText() != "":
-            int_audio_track_qty_already_used += int(comboboxs_audio_trackqty[i].currentText())
+                    comboboxes_audio_trackqty[i].addItem(str(k))
+                    comboboxes_audio_trackqty[i].setCurrentIndex(0)
+                    comboboxes_audio_trackqty[i].setEnabled(True)
+        if int_audio_track_qty_already_used < 8 and i < 3:
+            comboboxes_audio_format[i+1].setEnabled(True)
+        if comboboxes_audio_trackqty[i].currentText() != "":
+            int_audio_track_qty_already_used += int(comboboxes_audio_trackqty[i].currentText())
 
     return
 
@@ -779,24 +784,31 @@ class Main(QMainWindow):
             refresh_audio_combobox()
 
         def slot_combobox_indexchanged_audfmt_ch3and4():
+            print("in slot audfmtch3")
             refresh_audio_combobox()
 
         def slot_combobox_indexchanged_audfmt_ch5and6():
+            print("in slot audfmtch5")
             refresh_audio_combobox()
 
         def slot_combobox_indexchanged_audfmt_ch7and8():
+            print("in slot audfmtch7")
             refresh_audio_combobox()
 
         def slot_combobox_indexchanged_trackqty_ch1and2():
+            print("in slot aud_track_qty_ch1")
             refresh_audio_combobox()
 
         def slot_combobox_indexchanged_trackqty_ch3and4():
+            print("in slot aud_track_qty_ch3")
             refresh_audio_combobox()
 
         def slot_combobox_indexchanged_trackqty_ch5and6():
+            print("in slot aud_track_qty_ch5")
             refresh_audio_combobox()
 
         def slot_combobox_indexchanged_trackqty_ch7and8():
+            print("in slot aud_track_qty_ch7")
             refresh_audio_combobox()
 
         # C-Connect to SLot
@@ -848,9 +860,9 @@ class Main(QMainWindow):
             slot_combobox_indexchanged_trackqty_ch1and2)
         self.ui.comboBox_Audio_Track_Qty_Ch3and4.currentIndexChanged.connect(
             slot_combobox_indexchanged_trackqty_ch3and4)
-        self.ui.comboBox_Audio_Track_Qty_Ch1and2.currentIndexChanged.connect(
+        self.ui.comboBox_Audio_Track_Qty_Ch5and6.currentIndexChanged.connect(
             slot_combobox_indexchanged_trackqty_ch5and6)
-        self.ui.comboBox_Audio_Track_Qty_Ch1and2.currentIndexChanged.connect(
+        self.ui.comboBox_Audio_Track_Qty_Ch7and8.currentIndexChanged.connect(
             slot_combobox_indexchanged_trackqty_ch7and8)
 
         # D-init value for each radio button group

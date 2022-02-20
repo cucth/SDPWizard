@@ -1491,7 +1491,7 @@ Size</string>
      <rect>
       <x>280</x>
       <y>540</y>
-      <width>71</width>
+      <width>81</width>
       <height>26</height>
      </rect>
     </property>
@@ -1522,7 +1522,7 @@ Size</string>
      <rect>
       <x>280</x>
       <y>570</y>
-      <width>71</width>
+      <width>81</width>
       <height>26</height>
      </rect>
     </property>
@@ -1538,7 +1538,7 @@ Size</string>
      <rect>
       <x>280</x>
       <y>600</y>
-      <width>71</width>
+      <width>81</width>
       <height>26</height>
      </rect>
     </property>
@@ -1554,7 +1554,7 @@ Size</string>
      <rect>
       <x>280</x>
       <y>630</y>
-      <width>71</width>
+      <width>81</width>
       <height>26</height>
      </rect>
     </property>
