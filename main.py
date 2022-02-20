@@ -545,6 +545,7 @@ def refresh_audio_combobox():
                     comboboxes_audio_trackqty[i].addItem(str(k))
                     comboboxes_audio_trackqty[i].setCurrentIndex(0)
                     comboboxes_audio_trackqty[i].setEnabled(True)
+
         if int_audio_track_qty_already_used < 8 and i < 3:
             comboboxes_audio_format[i+1].setEnabled(True)
         if comboboxes_audio_trackqty[i].currentText() != "":
