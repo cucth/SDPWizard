@@ -144,7 +144,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>680</x>
+      <x>690</x>
       <y>30</y>
       <width>741</width>
       <height>771</height>
@@ -1221,7 +1221,7 @@
      <rect>
       <x>70</x>
       <y>540</y>
-      <width>131</width>
+      <width>141</width>
       <height>26</height>
      </rect>
     </property>
@@ -1254,7 +1254,7 @@
      <rect>
       <x>70</x>
       <y>570</y>
-      <width>131</width>
+      <width>141</width>
       <height>26</height>
      </rect>
     </property>
@@ -1287,7 +1287,7 @@
      <rect>
       <x>70</x>
       <y>600</y>
-      <width>131</width>
+      <width>141</width>
       <height>26</height>
      </rect>
     </property>
@@ -1320,7 +1320,7 @@
      <rect>
       <x>70</x>
       <y>630</y>
-      <width>131</width>
+      <width>141</width>
       <height>26</height>
      </rect>
     </property>
@@ -1364,7 +1364,7 @@
    <widget class="QLabel" name="label_audio_ch1and2_3">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>90</x>
       <y>520</y>
       <width>101</width>
       <height>16</height>
@@ -1489,7 +1489,7 @@ Size</string>
    <widget class="QComboBox" name="comboBox_Audio_Sample_Size_Ch1and2">
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>270</x>
       <y>540</y>
       <width>81</width>
       <height>26</height>
@@ -1520,15 +1520,30 @@ Size</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>270</x>
       <y>570</y>
       <width>81</width>
       <height>26</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>-1</number>
+     <number>1</number>
     </property>
+    <item>
+     <property name="text">
+      <string>16bit</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>24bit</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>32bit</string>
+     </property>
+    </item>
    </widget>
    <widget class="QComboBox" name="comboBox_Audio_Sample_Size_Ch5and6">
     <property name="enabled">
@@ -1536,15 +1551,30 @@ Size</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>270</x>
       <y>600</y>
       <width>81</width>
       <height>26</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>-1</number>
+     <number>1</number>
     </property>
+    <item>
+     <property name="text">
+      <string>16bit</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>24bit</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>32bit</string>
+     </property>
+    </item>
    </widget>
    <widget class="QComboBox" name="comboBox_Audio_Sample_Size_Ch7and8">
     <property name="enabled">
@@ -1552,15 +1582,30 @@ Size</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>270</x>
       <y>630</y>
       <width>81</width>
       <height>26</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>-1</number>
+     <number>1</number>
     </property>
+    <item>
+     <property name="text">
+      <string>16bit</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>24bit</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>32bit</string>
+     </property>
+    </item>
    </widget>
    <widget class="QLabel" name="label_Media_Audio_First_Colon">
     <property name="geometry">

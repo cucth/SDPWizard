@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup
+from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, QWidget
 # from PyQt5.QtGui import QRegExpValidator, QIntValidator
 from PyQt5 import QtCore
 import SDPW_MainWindow
@@ -30,6 +30,7 @@ DEFINE_SDPATTR_MEDIA_CLOCK: str = "mediaclk:"
 DEFINE_SDPATTR_MEDIA_RTPMAP: str = "rtpmap:"
 DEFINE_SDPATTR_MEDIA_FMTP: str = "fmtp:"
 DEFINE_SDPATTR_MEDIA_ID: str = "mid:"
+DEFINE_SDPATTR_MEDIA_PTIME: str = "ptime:"
 
 DEFINE_SDPPARAM_VIDEO_FMTP_SAMPLING: str = "sampling="
 DEFINE_SDPPARAM_VIDEO_FMTP_WIDTH: str = "width="
@@ -72,6 +73,8 @@ DEFINE_SDPVALUE_MEDIA_SUBTYPE_VIDEO: str = "raw/"
 DEFINE_SDPVALUE_MEDIA_SUBTYPE_ANC: str = "smpte291/"
 DEFINE_SDPVALUE_MEDIA_CLOCKRATE_VIDEO: str = "90000"
 DEFINE_SDPVALUE_MEDIA_CLOCKRATE_ANC: str = "90000"
+DEFEIN_SDPVALUE_MEDIA_PTIME_1MS: str = "1"
+DEFEIN_SDPVALUE_MEDIA_PTIME_125US: str = "0.125"
 
 str_proto_ver: str = ""
 str_sess_id: str = ""
@@ -155,6 +158,13 @@ str_channel_role: str = ""
 str_channel_role_short: str = ""
 str_tap_channel: str = ""
 str_tap_id: str = ""
+str_ptime: str = ""
+
+flag_is_slot_calling = False
+
+comboboxes_audio_format: QWidget = []
+comboboxes_audio_trackqty: QWidget = []
+comboboxes_audio_sample_size: QWidget = []
 
 
 def configSDP() -> bool:
@@ -240,6 +250,10 @@ def configSDP() -> bool:
     global str_channel_role_short
     global str_tap_channel
     global str_tap_id
+    global str_ptime
+    global comboboxes_audio_format
+    global comboboxes_audio_trackqty
+    global comboboxes_audio_sample_size
 
     str_proto_ver = DEFINE_SDPTYPE_PROTO_VER + DEFINE_SDPVALUE_PROTO_VER
     str_sess_id = MainWindow.ui.lineEdit_Sess_ID.text()
@@ -247,7 +261,24 @@ def configSDP() -> bool:
     str_origin_unicast_ipaddr = MainWindow.ui.ip4Edit_origin_IpAddr.text()
     str_channel_name = MainWindow.ui.lineEdit_Channel_ID.text()
     str_tap_id = MainWindow.ui.lineEdit_Tap_ID.text()
-
+    comboboxes_audio_format = [
+        MainWindow.ui.comboBox_Audio_Format_Ch1and2,
+        MainWindow.ui.comboBox_Audio_Format_Ch3and4,
+        MainWindow.ui.comboBox_Audio_Format_Ch5and6,
+        MainWindow.ui.comboBox_Audio_Format_Ch7and8
+    ]
+    comboboxes_audio_trackqty = [
+        MainWindow.ui.comboBox_Audio_Track_Qty_Ch1and2,
+        MainWindow.ui.comboBox_Audio_Track_Qty_Ch3and4,
+        MainWindow.ui.comboBox_Audio_Track_Qty_Ch5and6,
+        MainWindow.ui.comboBox_Audio_Track_Qty_Ch7and8
+    ]
+    comboboxes_audio_sample_size = [
+        MainWindow.ui.comboBox_Audio_Sample_Size_Ch1and2,
+        MainWindow.ui.comboBox_Audio_Sample_Size_Ch3and4,
+        MainWindow.ui.comboBox_Audio_Sample_Size_Ch5and6,
+        MainWindow.ui.comboBox_Audio_Sample_Size_Ch7and8
+    ]
     # verify session ID:
 
     # verify session verison:
@@ -278,6 +309,7 @@ def configSDP() -> bool:
         DEFINE_SDPTYPE_SESS_NAME + "ANC Data SDP file for Channel-" + \
         str_channel_name + "-" + str_channel_role + \
         ", output on Tap#" + str_tap_id + "-" + str_tap_channel
+
     # Session Information - Video
     str_sess_info_video = \
         DEFINE_SDPTYPE_SESS_INFO + str_media_video_fmtp_value_height[0:-1]
@@ -297,8 +329,30 @@ def configSDP() -> bool:
 
     str_sess_info_video += " video stream, ST 2110-20"
 
-    if MainWindow.ui.checkBox_Media_Video_DUP.isChecked():
+    if MainWindow.ui.checkBox_Media_DUP.isChecked():
         str_sess_info_video += " with ST 2022-7"
+
+    # Session Information - Audio
+    str_sess_info_audio = DEFINE_SDPTYPE_SESS_INFO + "Audio streams: "
+    for i in range(4):
+        if comboboxes_audio_format[i].currentIndex() != 0 and comboboxes_audio_trackqty[i].isEnabled():
+            if i > 0:
+                str_sess_info_audio += ", and "
+            str_sess_info_audio += comboboxes_audio_trackqty[i].currentText()
+            str_sess_info_audio += " channels"
+            if comboboxes_audio_format[i].currentIndex() == 1:
+                str_sess_info_audio += " PCM Standard Stereo (L,R) "
+            elif comboboxes_audio_format[i].currentIndex() == 2:
+                str_sess_info_audio += " PCM 5.1 Surround (L,R,C,LFE,Ls,Rs) "
+            elif comboboxes_audio_format[i].currentIndex() == 3:
+                str_sess_info_audio += " DolbyE Compressed in AES3 frame "
+
+            str_sess_info_audio += comboboxes_audio_sample_size[i].currentText()
+            str_sess_info_audio += " samples"
+    str_sess_info_audio += ", ST 2110-30"
+
+    if MainWindow.ui.checkBox_Media_DUP.isChecked():
+        str_sess_info_audio += " with ST 2022-7"
 
     # E-mail
     if MainWindow.ui.lineEdit_Sess_Email.text() == "":
@@ -310,7 +364,7 @@ def configSDP() -> bool:
         DEFINE_SDPTYPE_TIME_SESS_ACT + DEFINE_SDPVALUE_SESS_START_TIME + \
         DEFINE_NBSP + DEFINE_SDPVALUE_SESS_STOP_TIME
     # Group Description for Media Streams
-    if MainWindow.ui.checkBox_Media_Video_DUP.isChecked():
+    if MainWindow.ui.checkBox_Media_DUP.isChecked():
         str_sess_group = \
             DEFINE_SDPTYPE_SESS_ATTR + DEFINE_SDPATTR_GROUP + \
             DEFINE_SDPVALUE_GROUP_TYPE + DEFINE_NBSP + \
@@ -335,7 +389,7 @@ def configSDP() -> bool:
     str_media_video_dest_mcaddr_first = MainWindow.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.text()
     str_media_video_dest_mcport_first = MainWindow.ui.lineEdit_Media_Video_First_Dest_Mcast_Port.text()
     str_media_ttl_video = MainWindow.ui.lineEdit_Media_Conn_TTL.text()
-    if MainWindow.ui.checkBox_Media_Video_DUP.isChecked():
+    if MainWindow.ui.checkBox_Media_DUP.isChecked():
         str_media_video_dest_mcport_second = MainWindow.ui.lineEdit_Media_Video_Second_Dest_Mcast_Port.text()
         str_media_desc_video_second = \
             DEFINE_SDPTYPE_MEDIA + DEFINE_SDPVALUE_MEDIA_TYPE_VIDEO + DEFINE_NBSP + \
@@ -466,7 +520,14 @@ def configSDP() -> bool:
 
     # F-14 validate ANC second dest mcast port
 
+    # Audio Packet Time
+    str_ptime = \
+        DEFINE_SDPTYPE_MEDIA_ATTR + \
+        DEFINE_SDPATTR_MEDIA_PTIME + \
+        DEFEIN_SDPVALUE_MEDIA_PTIME_1MS
+
     # Generate SDP preview
+    # Video SDP
     MainWindow.ui.listWidget_SDPPreview.clear()
     MainWindow.ui.listWidget_SDPPreview.setStyleSheet("alternate-background-color: #DEEAF6")
     MainWindow.ui.listWidget_SDPPreview.addItem(str_proto_ver)
@@ -475,7 +536,7 @@ def configSDP() -> bool:
     MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_info_video)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_email)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_time)
-    if MainWindow.ui.checkBox_Media_Video_DUP.isChecked():
+    if MainWindow.ui.checkBox_Media_DUP.isChecked():
         MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_group)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_tool)
     MainWindow.ui.listWidget_SDPPreview.addItem("-------------")
@@ -486,7 +547,7 @@ def configSDP() -> bool:
     MainWindow.ui.listWidget_SDPPreview.addItem(str_media_fmtp_video)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_media_refclk)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_media_clock_isdirect)
-    if MainWindow.ui.checkBox_Media_Video_DUP.isChecked():
+    if MainWindow.ui.checkBox_Media_DUP.isChecked():
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_id_video_first)
         MainWindow.ui.listWidget_SDPPreview.addItem("-------------")
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_desc_video_second)
@@ -497,12 +558,55 @@ def configSDP() -> bool:
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_refclk)
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_clock_isdirect)
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_id_video_second)
+    # Audio SDP
+    MainWindow.ui.listWidget_SDPPreview.addItem(" ")
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_proto_ver)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_origin)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_name_audio)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_info_audio)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_email)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_time)
+    if MainWindow.ui.checkBox_Media_DUP.isChecked():
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_group)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_tool)
+    MainWindow.ui.listWidget_SDPPreview.addItem("-------------")
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_desc_audio_first)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_info_audio_first)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_conn_audio_first)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_rtpmap_audio_first)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_fmtp_audio)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_ptime)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_refclk)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_clock_isdirect)
+    if MainWindow.ui.checkBox_Media_DUP.isChecked():
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_id_video_first)
+        MainWindow.ui.listWidget_SDPPreview.addItem("-------------")
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_desc_audio_second)
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_info_audio_second)
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_conn_audio_second)
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_rtpmap_audio_second)
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_fmtp_audio)
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_ptime)
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_refclk)
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_clock_isdirect)
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_id_video_second)
+
+    comboboxes_audio_format.clear()
+    comboboxes_audio_trackqty.clear()
+    comboboxes_audio_sample_size.clear()
 
     return True
 
 
 def refresh_audio_combobox():
+    global flag_is_slot_calling
+    global comboboxes_audio_format
+    global comboboxes_audio_trackqty
+    global comboboxes_audio_sample_size
+    flag_is_slot_calling = True
+
     int_audio_track_qty_already_used = 0
+
     comboboxes_audio_format = [
         MainWindow.ui.comboBox_Audio_Format_Ch1and2,
         MainWindow.ui.comboBox_Audio_Format_Ch3and4,
@@ -539,18 +643,34 @@ def refresh_audio_combobox():
             comboboxes_audio_trackqty[i].setDisabled(True)
             comboboxes_audio_sample_size[i].setDisabled(True)
             break
-        elif comboboxes_audio_format[i].currentIndex() == 1:  # if value is PCM-ST
-            if comboboxes_audio_trackqty[i].count() == 0:
-                for k in range(2, 10-int_audio_track_qty_already_used, 2):
-                    comboboxes_audio_trackqty[i].addItem(str(k))
-                    comboboxes_audio_trackqty[i].setCurrentIndex(0)
-                    comboboxes_audio_trackqty[i].setEnabled(True)
+        elif comboboxes_audio_format[i].currentIndex() in (1, 3):  # if value is PCM-ST, or DolbyE in AES
+            if comboboxes_audio_trackqty[i].count() != 0:
+                comboboxes_audio_trackqty[i].clear()
+            for k in range(2, 10-int_audio_track_qty_already_used, 2):
+                comboboxes_audio_trackqty[i].addItem(str(k))
+                comboboxes_audio_trackqty[i].setCurrentIndex(0)
+                comboboxes_audio_trackqty[i].setEnabled(True)
+            if comboboxes_audio_trackqty[i].count() != 0:
+                comboboxes_audio_sample_size[i].setEnabled(True)
+        elif comboboxes_audio_format[i].currentIndex() == 2:  # if value is PCM 5.1
+            comboboxes_audio_trackqty[i].clear()
+            if int_audio_track_qty_already_used <= 2:
+                comboboxes_audio_trackqty[i].addItem("6")
+                comboboxes_audio_trackqty[i].setCurrentIndex(0)
+                comboboxes_audio_trackqty[i].setEnabled(True)
+            else:
+                comboboxes_audio_trackqty[i].setDisabled(True)
+                comboboxes_audio_sample_size[i].setDisabled(True)
 
         if int_audio_track_qty_already_used < 8 and i < 3:
             comboboxes_audio_format[i+1].setEnabled(True)
         if comboboxes_audio_trackqty[i].currentText() != "":
             int_audio_track_qty_already_used += int(comboboxes_audio_trackqty[i].currentText())
 
+    comboboxes_audio_format.clear()
+    comboboxes_audio_trackqty.clear()
+    comboboxes_audio_sample_size.clear()
+    flag_is_slot_calling = False
     return
 
 
@@ -589,7 +709,7 @@ class Main(QMainWindow):
         self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
 
         def checkBox_Media_Video_DUP_Clicked():
-            if self.ui.checkBox_Media_Video_DUP.isChecked():
+            if self.ui.checkBox_Media_DUP.isChecked():
                 self.ui.label_Media_Video_First_Dest.setText("First Destination:")
                 self.ui.label_Media_Video_Second_Dest.show()
                 self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.show()
@@ -781,36 +901,36 @@ class Main(QMainWindow):
 
         # B-10-Slots for (audio) combobox on index change
         def slot_combobox_indexchanged_audfmt_ch1and2():
-            print("in slot audfmtch1")
-            refresh_audio_combobox()
+            if not flag_is_slot_calling:
+                refresh_audio_combobox()
 
         def slot_combobox_indexchanged_audfmt_ch3and4():
-            print("in slot audfmtch3")
-            refresh_audio_combobox()
+            if not flag_is_slot_calling:
+                refresh_audio_combobox()
 
         def slot_combobox_indexchanged_audfmt_ch5and6():
-            print("in slot audfmtch5")
-            refresh_audio_combobox()
+            if not flag_is_slot_calling:
+                refresh_audio_combobox()
 
         def slot_combobox_indexchanged_audfmt_ch7and8():
-            print("in slot audfmtch7")
-            refresh_audio_combobox()
+            if not flag_is_slot_calling:
+                refresh_audio_combobox()
 
         def slot_combobox_indexchanged_trackqty_ch1and2():
-            print("in slot aud_track_qty_ch1")
-            refresh_audio_combobox()
+            if not flag_is_slot_calling:
+                refresh_audio_combobox()
 
         def slot_combobox_indexchanged_trackqty_ch3and4():
-            print("in slot aud_track_qty_ch3")
-            refresh_audio_combobox()
+            if not flag_is_slot_calling:
+                refresh_audio_combobox()
 
         def slot_combobox_indexchanged_trackqty_ch5and6():
-            print("in slot aud_track_qty_ch5")
-            refresh_audio_combobox()
+            if not flag_is_slot_calling:
+                refresh_audio_combobox()
 
         def slot_combobox_indexchanged_trackqty_ch7and8():
-            print("in slot aud_track_qty_ch7")
-            refresh_audio_combobox()
+            if not flag_is_slot_calling:
+                refresh_audio_combobox()
 
         # C-Connect to SLot
         # C-1-Dir Model:
@@ -852,7 +972,7 @@ class Main(QMainWindow):
 
         # C-10 single object
         self.ui.pushButton_GenSDP.clicked.connect(pushButton_GenSDP_Clicked)
-        self.ui.checkBox_Media_Video_DUP.clicked.connect(checkBox_Media_Video_DUP_Clicked)
+        self.ui.checkBox_Media_DUP.clicked.connect(checkBox_Media_Video_DUP_Clicked)
         self.ui.comboBox_Audio_Format_Ch1and2.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch1and2)
         self.ui.comboBox_Audio_Format_Ch3and4.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch3and4)
         self.ui.comboBox_Audio_Format_Ch5and6.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch5and6)
