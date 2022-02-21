@@ -1,5 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, QWidget
+import os
+from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, QWidget, QFileDialog
 # from PyQt5.QtGui import QRegExpValidator, QIntValidator
 from PyQt5 import QtCore
 import SDPW_MainWindow
@@ -163,9 +164,13 @@ str_channel_role_short: str = ""
 str_tap_channel: str = ""
 str_tap_id: str = ""
 str_ptime: str = ""
-
-flag_is_slot_calling = False
-
+str_filename_sdp_video: str = ""
+str_filename_sdp_audio: str = ""
+str_filename_sdp_anc: str = ""
+str_filename_sdps: str = ""
+str_output_path: str = ""
+str_sub_path: str = ""
+flag_is_slot_calling: bool = False
 comboboxes_audio_format: list[QWidget] = []
 comboboxes_audio_trackqty: list[QWidget] = []
 comboboxes_audio_sample_size: list[QWidget] = []
@@ -254,6 +259,11 @@ def configSDP() -> bool:
     global comboboxes_audio_format
     global comboboxes_audio_trackqty
     global comboboxes_audio_sample_size
+    global str_filename_sdp_video
+    global str_filename_sdp_audio
+    global str_filename_sdp_anc
+    global str_filename_sdps
+    global str_sub_path
 
     str_proto_ver = DEFINE_SDPTYPE_PROTO_VER + DEFINE_SDPVALUE_PROTO_VER
     str_sess_id = MainWindow.ui.lineEdit_Sess_ID.text()
@@ -297,21 +307,41 @@ def configSDP() -> bool:
         DEFINE_SDPVALUE_NETTYPE + DEFINE_NBSP + \
         DEFINE_SDPVALUE_ADDRTYPE + DEFINE_NBSP + \
         str_origin_unicast_ipaddr
-    # Session Name - Video
+    # Session Name - Video, Audio, ANC
     str_sess_name_video = \
         DEFINE_SDPTYPE_SESS_NAME + "Video SDP file for Channel-" + \
         str_channel_name + "-" + str_channel_role + \
         ", output on Tap#" + str_tap_id + "-" + str_tap_channel
-    # Session Name - Audio
     str_sess_name_audio = \
         DEFINE_SDPTYPE_SESS_NAME + "Audio SDP file for Channel-" + \
         str_channel_name + "-" + str_channel_role + \
         ", output on Tap#" + str_tap_id + "-" + str_tap_channel
-    # Session Name - ANC
     str_sess_name_anc = \
         DEFINE_SDPTYPE_SESS_NAME + "Ancillary Data SDP file for Channel-" + \
         str_channel_name + "-" + str_channel_role + \
         ", output on Tap#" + str_tap_id + "-" + str_tap_channel
+    # SDP file Name - Video, Audio, ANC
+    str_filename_sdp_video = \
+        "OUT_Tap" + str_tap_id + str_tap_channel + \
+        "_CH-" + str_channel_name.upper() + \
+        "-" + str_channel_role_short + \
+        "_Video.sdp"
+    str_filename_sdp_audio = \
+        "OUT_Tap" + str_tap_id + str_tap_channel + \
+        "_CH-" + str_channel_name.upper() + \
+        "-" + str_channel_role_short + \
+        "_Audio.sdp"
+    str_filename_sdp_anc = \
+        "OUT_Tap" + str_tap_id + str_tap_channel + \
+        "_CH-" + str_channel_name.upper() + \
+        "-" + str_channel_role_short + \
+        "_ANC_Data.sdp"
+    str_filename_sdps = \
+        "OUT_Tap" + str_tap_id + str_tap_channel + \
+        "_CH-" + str_channel_name.upper() + \
+        "-" + str_channel_role_short + \
+        ".sdps"
+    str_sub_path = "OUT_Tap" + str_tap_id + str_tap_channel
 
     # Session Information - Video, Audio, ANC
     str_sess_info_video = \
@@ -439,7 +469,8 @@ def configSDP() -> bool:
         str_media_audio_dest_mcport_first + DEFINE_NBSP + \
         DEFINE_SDPVALUE_MEDIA_PROTOCOL_AUDIO + DEFINE_NBSP
     for i in range(4):
-        if comboboxes_audio_format[i].currentIndex() != 0:
+        if comboboxes_audio_format[i].currentIndex() != 0 \
+                and comboboxes_audio_trackqty[i].currentText() != "":
             str_media_desc_audio_first += DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO[i]
             str_media_desc_audio_first += " "
     str_media_audio_dest_mcaddr_first = MainWindow.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.text()
@@ -453,7 +484,8 @@ def configSDP() -> bool:
             str_media_audio_dest_mcport_second + DEFINE_NBSP + \
             DEFINE_SDPVALUE_MEDIA_PROTOCOL_AUDIO + DEFINE_NBSP
         for i in range(4):
-            if comboboxes_audio_format[i].currentIndex() != 0:
+            if comboboxes_audio_format[i].currentIndex() != 0 \
+                    and comboboxes_audio_trackqty[i].currentText() != "":
                 str_media_desc_audio_second += DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO[i]
                 str_media_desc_audio_second += " "
         str_media_info_audio_first = \
@@ -461,7 +493,9 @@ def configSDP() -> bool:
         str_media_info_audio_second = \
             DEFINE_SDPTYPE_MEDIA_TITLE + "Second Audio Stream in 2022-7 Group. "
         for i in range(4):
-            if comboboxes_audio_format[i].currentIndex() != 0 and comboboxes_audio_trackqty[i].isEnabled():
+            if comboboxes_audio_format[i].currentIndex() != 0 \
+                    and comboboxes_audio_trackqty[i].isEnabled() \
+                    and comboboxes_audio_trackqty[i].currentText() != "":
                 if i > 0:
                     str_media_info_audio_first += ", and "
                     str_media_info_audio_second += ", and "
@@ -499,7 +533,9 @@ def configSDP() -> bool:
         str_media_info_audio_first = \
             DEFINE_SDPTYPE_MEDIA_TITLE + "Audio Stream: "
         for i in range(4):
-            if comboboxes_audio_format[i].currentIndex() != 0 and comboboxes_audio_trackqty[i].isEnabled():
+            if comboboxes_audio_format[i].currentIndex() != 0 \
+                    and comboboxes_audio_trackqty[i].isEnabled() \
+                    and comboboxes_audio_trackqty[i].currentText() != "":
                 if i > 0:
                     str_media_info_audio_first += ", and "
                 str_media_info_audio_first += comboboxes_audio_trackqty[i].currentText()
@@ -519,7 +555,9 @@ def configSDP() -> bool:
             str_media_audio_dest_mcaddr_first + "/" + str_media_ttl_audio
 
     for i in range(4):
-        if comboboxes_audio_format[i].currentIndex() != 0 and comboboxes_audio_trackqty[i].isEnabled():
+        if comboboxes_audio_format[i].currentIndex() != 0 \
+                and comboboxes_audio_trackqty[i].isEnabled() \
+                and comboboxes_audio_trackqty[i].currentText() != "":
             str_media_rtpmap_audio[i] = \
                 DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_RTPMAP + \
                 DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO[i] + DEFINE_NBSP
@@ -753,12 +791,30 @@ def configSDP() -> bool:
         MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_media_refclk)
         MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_media_clock_isdirect)
         MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_media_id_anc_second)
+    # Channel SDPS
+    MainWindow.ui.listWidget_SDPPreview_SDPS.addItem(str_filename_sdp_video)
+    MainWindow.ui.listWidget_SDPPreview_SDPS.addItem(str_filename_sdp_audio)
+    MainWindow.ui.listWidget_SDPPreview_SDPS.addItem(str_filename_sdp_anc)
 
+    MainWindow.ui.tabWidget_SDPPreview.setCurrentIndex(0)
+    MainWindow.ui.pushButton_SavetoFile.setEnabled(True)
     # clear variables
     comboboxes_audio_format.clear()
     comboboxes_audio_trackqty.clear()
     comboboxes_audio_sample_size.clear()
 
+    return True
+
+
+def savetoFile() -> bool:
+    global str_filename_sdp_video
+    global str_filename_sdp_audio
+    global str_filename_sdp_anc
+    global str_filename_sdps
+    global str_output_path
+    global str_sub_path
+    str_output_path = QFileDialog.getExistingDirectory(None, "Choose Output Directory", os.getcwd())
+    print(str_output_path)
     return True
 
 
@@ -768,6 +824,7 @@ def refresh_audio_combobox():
     global comboboxes_audio_trackqty
     global comboboxes_audio_sample_size
     flag_is_slot_calling = True
+    track_qty_selected_in_current_line: str = ""
 
     int_audio_track_qty_already_used = 0
 
@@ -809,11 +866,13 @@ def refresh_audio_combobox():
             break
         elif comboboxes_audio_format[i].currentIndex() in (1, 3):  # if value is PCM-ST, or DolbyE in AES
             if comboboxes_audio_trackqty[i].count() != 0:
+                track_qty_selected_in_current_line = comboboxes_audio_trackqty[i].currentText()
                 comboboxes_audio_trackqty[i].clear()
             for k in range(2, 10-int_audio_track_qty_already_used, 2):
                 comboboxes_audio_trackqty[i].addItem(str(k))
-                comboboxes_audio_trackqty[i].setCurrentIndex(0)
-                comboboxes_audio_trackqty[i].setEnabled(True)
+                if str(k) == track_qty_selected_in_current_line:
+                    comboboxes_audio_trackqty[i].setCurrentIndex(comboboxes_audio_trackqty[i].count()-1)
+            comboboxes_audio_trackqty[i].setEnabled(True)
             if comboboxes_audio_trackqty[i].count() != 0:
                 comboboxes_audio_sample_size[i].setEnabled(True)
         elif comboboxes_audio_format[i].currentIndex() == 2:  # if value is PCM 5.1
@@ -965,9 +1024,11 @@ class Main(QMainWindow):
         ]
         self.btngroup_tapchn = QButtonGroup()
 
-        # B-0-Slot for Generate SDP button
+        # B-0-Slot for buttons
         def pushButton_GenSDP_Clicked():
             configSDP()
+        def pushButton_SavetoFile_Clicked():
+            savetoFile()
 
         # B-x-Radio Button GROUP - Slot for clicked
         # B-1-Dir Model:
@@ -1136,6 +1197,7 @@ class Main(QMainWindow):
 
         # C-10 single object
         self.ui.pushButton_GenSDP.clicked.connect(pushButton_GenSDP_Clicked)
+        self.ui.pushButton_SavetoFile.clicked.connect(pushButton_SavetoFile_Clicked)
         self.ui.checkBox_Media_DUP.clicked.connect(checkBox_Media_DUP_Clicked)
         self.ui.comboBox_Audio_Format_Ch1and2.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch1and2)
         self.ui.comboBox_Audio_Format_Ch3and4.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch3and4)

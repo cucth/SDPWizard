@@ -163,14 +163,14 @@
    <widget class="QPushButton" name="pushButton_GenSDP">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>810</y>
-      <width>113</width>
+      <x>742</x>
+      <y>800</y>
+      <width>151</width>
       <height>32</height>
      </rect>
     </property>
     <property name="text">
-     <string>Generate SDP</string>
+     <string>Generate for Review</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_Sess_ID">
@@ -1785,7 +1785,7 @@ Size</string>
      <enum>QTabWidget::Triangular</enum>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>0</number>
     </property>
     <property name="elideMode">
      <enum>Qt::ElideRight</enum>
@@ -1954,7 +1954,7 @@ Size</string>
     </widget>
     <widget class="QWidget" name="tab_sdps">
      <attribute name="title">
-      <string>Channel SDPS</string>
+      <string>Manifest (SDPs)</string>
      </attribute>
      <widget class="QListWidget" name="listWidget_SDPPreview_SDPS">
       <property name="enabled">
@@ -2003,6 +2003,22 @@ Size</string>
       </property>
      </widget>
     </widget>
+   </widget>
+   <widget class="QPushButton" name="pushButton_SavetoFile">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>1230</x>
+      <y>800</y>
+      <width>151</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Export to File</string>
+    </property>
    </widget>
   </widget>
  </widget>
