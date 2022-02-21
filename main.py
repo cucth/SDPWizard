@@ -6,16 +6,14 @@ import SDPW_MainWindow
 import IP4Edit
 
 DEFINE_NBSP = " "
-DEFINE_EMAIL_HARMONIC_SUPPORT = "support@harmonicinc.com"
-DEFINE_MY_NAME = "SDP Wizard (for Harmonic Spectrum)"
+DEFINE_MY_NAME = "SDP Wizard (for Spectrum)"
 DEFINE_MY_VERSION = "0.1-alpha"
-DEFINE_MY_AUTHOR = "Charles Sun @Harmonic Inc."
+DEFINE_MY_AUTHOR = "Charles Sun @Harmonic Inc. (2022)"
 
 DEFINE_SDPTYPE_PROTO_VER: str = "v="
 DEFINE_SDPTYPE_ORIGIN: str = "o="
 DEFINE_SDPTYPE_SESS_NAME: str = "s="
 DEFINE_SDPTYPE_SESS_INFO: str = "i="
-DEFINE_SDPTYPE_EMAIL: str = "e="
 DEFINE_SDPTYPE_TIME_SESS_ACT: str = "t="
 DEFINE_SDPTYPE_SESS_ATTR: str = "a="
 DEFINE_SDPTYPE_MEDIA: str = "m="
@@ -44,6 +42,7 @@ DEFINE_SDPPARAM_VIDEO_FMTP_PM: str = "PM="
 DEFINE_SDPPARAM_VIDEO_FMTP_TP: str = "TP="
 DEFINE_SDPPARAM_VIDEO_FMTP_TROFF: str = "TROFF="
 DEFINE_SDPPARAM_VIDEO_FMTP_SSN: str = "SSN="
+DEFINE_SDPPARAM_AUDIO_CHANNELORDER: str = "channel-order="
 
 DEFINE_SDPVALUE_PROTO_VER: str = "0"
 DEFINE_SDPVALUE_SESS_USERNAME: str = "-"
@@ -67,10 +66,7 @@ DEFINE_SDPVALUE_MEDIA_PROTOCOL_VIDEO: str = "RTP/AVP"
 DEFINE_SDPVALUE_MEDIA_PROTOCOL_AUDIO: str = "RTP/AVP"
 DEFINE_SDPVALUE_MEDIA_PROTOCOL_ANC: str = "RTP/AVP"
 DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_VIDEO: str = "96"
-DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO1: str = "97"
-DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO2: str = "98"
-DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO3: str = "99"
-DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO4: str = "100"
+DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO: list[str] = ["97", "98", "99", "100"]
 DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_ANC: str = "101"
 DEFINE_SDPVALUE_MEDIA_SUBTYPE_VIDEO: str = "raw/"
 DEFINE_SDPVALUE_MEDIA_SUBTYPE_ANC: str = "smpte291/"
@@ -78,6 +74,15 @@ DEFINE_SDPVALUE_MEDIA_CLOCKRATE_VIDEO: str = "90000"
 DEFINE_SDPVALUE_MEDIA_CLOCKRATE_ANC: str = "90000"
 DEFEIN_SDPVALUE_MEDIA_PTIME_1MS: str = "1"
 DEFEIN_SDPVALUE_MEDIA_PTIME_125US: str = "0.125"
+DEFEIN_SDPVALUE_MEDIA_SUBTYPE_AUDIO_L16: str = "L16/"
+DEFEIN_SDPVALUE_MEDIA_SUBTYPE_AUDIO_L24: str = "L24/"
+DEFEIN_SDPVALUE_MEDIA_SUBTYPE_AUDIO_L32: str = "L32/"
+DEFEIN_SDPVALUE_MEDIA_SUBTYPE_AUDIO_AES3: str = "AM824/"
+DEFEIN_SDPVALUE_MEDIA_AUDIO_SAMPLING_RATE: str = "48000/"
+DEFINE_SDPVALUE_AUDIO_CHANNELORDER_ST: str = "SMPTE2110.(ST)"
+DEFINE_SDPVALUE_AUDIO_CHANNELORDER_51: str = "SMPTE2110.(51)"
+DEFINE_SDPVALUE_AUDIO_CHANNELORDER_AES3: str = "SMPTE2110.(AES3)"
+DEFINE_SDPVALUE_AUDIO_CHANNELORDER_SGRP: str = "SMPTE2110.(SGRP)"
 
 str_proto_ver: str = ""
 str_sess_id: str = ""
@@ -89,7 +94,6 @@ str_sess_name_anc: str = ""
 str_sess_info_video: str = ""
 str_sess_info_audio: str = ""
 str_sess_info_anc: str = ""
-str_sess_email: str = ""
 str_sess_time: str = ""
 str_sess_group: str = ""
 str_sess_tool: str = ""
@@ -141,14 +145,11 @@ str_media_conn_anc_second: str = ""
 str_media_ttl_video: str = ""
 str_media_ttl_audio: str = ""
 str_media_ttl_anc: str = ""
-str_media_rtpmap_video_first: str = ""
-str_media_rtpmap_video_second: str = ""
-str_media_rtpmap_audio_first: str = ""
-str_media_rtpmap_audio_second: str = ""
-str_media_rtpmap_anc_first: str = ""
-str_media_rtpmap_anc_second: str = ""
+str_media_rtpmap_video: str = ""
+str_media_rtpmap_audio: list[str] = []
+str_media_rtpmap_anc: str = ""
 str_media_fmtp_video: str = ""
-str_media_fmtp_audio: str = ""
+str_media_fmtp_audio: list[str] = []
 str_media_fmtp_anc: str = ""
 str_media_id_video_first: str = ""
 str_media_id_video_second: str = ""
@@ -168,12 +169,6 @@ flag_is_slot_calling = False
 comboboxes_audio_format: list[QWidget] = []
 comboboxes_audio_trackqty: list[QWidget] = []
 comboboxes_audio_sample_size: list[QWidget] = []
-sdpvalue_rtppayload_type_audio: list[str] = [
-    DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO1,
-    DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO2,
-    DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO3,
-    DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO4
-]
 
 
 def configSDP() -> bool:
@@ -188,7 +183,6 @@ def configSDP() -> bool:
     global str_sess_info_video
     global str_sess_info_audio
     global str_sess_info_anc
-    global str_sess_email
     global str_sess_time
     global str_sess_group
     global str_sess_tool
@@ -239,12 +233,9 @@ def configSDP() -> bool:
     global str_media_ttl_video
     global str_media_ttl_audio
     global str_media_ttl_anc
-    global str_media_rtpmap_video_first
-    global str_media_rtpmap_video_second
-    global str_media_rtpmap_audio_first
-    global str_media_rtpmap_audio_second
-    global str_media_rtpmap_anc_first
-    global str_media_rtpmap_anc_second
+    global str_media_rtpmap_video
+    global str_media_rtpmap_audio
+    global str_media_rtpmap_anc
     global str_media_fmtp_video
     global str_media_fmtp_audio
     global str_media_fmtp_anc
@@ -288,6 +279,9 @@ def configSDP() -> bool:
         MainWindow.ui.comboBox_Audio_Sample_Size_Ch5and6,
         MainWindow.ui.comboBox_Audio_Sample_Size_Ch7and8
     ]
+    str_media_rtpmap_audio = ["", "", "", ""]
+    str_media_fmtp_audio = ["", "", "", ""]
+
     # verify session ID:
 
     # verify session verison:
@@ -319,7 +313,7 @@ def configSDP() -> bool:
         str_channel_name + "-" + str_channel_role + \
         ", output on Tap#" + str_tap_id + "-" + str_tap_channel
 
-    # Session Information - Video
+    # Session Information - Video, Audio
     str_sess_info_video = \
         DEFINE_SDPTYPE_SESS_INFO + str_media_video_fmtp_value_height[0:-1]
     if str_media_video_fmtp_value_interlace == "interlace; ":
@@ -336,38 +330,12 @@ def configSDP() -> bool:
     elif str_media_video_fmtp_value_exactframerate == "60000/1001;":
         str_sess_info_video += "59.94"
 
-    str_sess_info_video += " video stream, ST 2110-20"
-
+    str_sess_info_video += " Video Stream, ST 2110-20"
+    str_sess_info_audio = DEFINE_SDPTYPE_SESS_INFO + "Audio Stream Pair, ST 2110-30/31"
     if MainWindow.ui.checkBox_Media_DUP.isChecked():
         str_sess_info_video += " with ST 2022-7"
-
-    # Session Information - Audio
-    str_sess_info_audio = DEFINE_SDPTYPE_SESS_INFO + "Audio streams: "
-    for i in range(4):
-        if comboboxes_audio_format[i].currentIndex() != 0 and comboboxes_audio_trackqty[i].isEnabled():
-            if i > 0:
-                str_sess_info_audio += ", and "
-            str_sess_info_audio += comboboxes_audio_trackqty[i].currentText()
-            str_sess_info_audio += " channels"
-            if comboboxes_audio_format[i].currentIndex() == 1:
-                str_sess_info_audio += " PCM Standard Stereo (L,R) "
-            elif comboboxes_audio_format[i].currentIndex() == 2:
-                str_sess_info_audio += " PCM 5.1 Surround (L,R,C,LFE,Ls,Rs) "
-            elif comboboxes_audio_format[i].currentIndex() == 3:
-                str_sess_info_audio += " DolbyE Compressed in AES3 frame "
-
-            str_sess_info_audio += comboboxes_audio_sample_size[i].currentText()
-            str_sess_info_audio += " samples"
-    str_sess_info_audio += ", ST 2110-30"
-
-    if MainWindow.ui.checkBox_Media_DUP.isChecked():
         str_sess_info_audio += " with ST 2022-7"
 
-    # E-mail
-    if MainWindow.ui.lineEdit_Sess_Email.text() == "":
-        str_sess_email = DEFINE_SDPTYPE_EMAIL + DEFINE_EMAIL_HARMONIC_SUPPORT
-    else:
-        str_sess_email = DEFINE_SDPTYPE_EMAIL + MainWindow.ui.lineEdit_Sess_Email.text()
     # Session Active Time
     str_sess_time = \
         DEFINE_SDPTYPE_TIME_SESS_ACT + DEFINE_SDPVALUE_SESS_START_TIME + \
@@ -388,7 +356,7 @@ def configSDP() -> bool:
         " ver" + DEFINE_MY_VERSION + \
         " by " + DEFINE_MY_AUTHOR
 
-    # Video (Sole, or first+second; incl. v desc, info, conn, rtpmap, fmtp)
+    # Video (Sole, or first+second; incl. media desc, info, conn, rtpmap, fmtp)
     str_media_video_dest_mcport_first = MainWindow.ui.lineEdit_Media_Video_First_Dest_Mcast_Port.text()
     str_media_desc_video_first = \
         DEFINE_SDPTYPE_MEDIA + DEFINE_SDPVALUE_MEDIA_TYPE_VIDEO + DEFINE_NBSP + \
@@ -398,6 +366,7 @@ def configSDP() -> bool:
     str_media_video_dest_mcaddr_first = MainWindow.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.text()
     str_media_video_dest_mcport_first = MainWindow.ui.lineEdit_Media_Video_First_Dest_Mcast_Port.text()
     str_media_ttl_video = MainWindow.ui.lineEdit_Media_Conn_TTL.text()
+
     if MainWindow.ui.checkBox_Media_DUP.isChecked():
         str_media_video_dest_mcport_second = MainWindow.ui.lineEdit_Media_Video_Second_Dest_Mcast_Port.text()
         str_media_desc_video_second = \
@@ -406,9 +375,9 @@ def configSDP() -> bool:
             DEFINE_SDPVALUE_MEDIA_PROTOCOL_VIDEO + DEFINE_NBSP + \
             DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_VIDEO
         str_media_info_video_first = \
-            DEFINE_SDPTYPE_MEDIA_TITLE + "First Video Stream Description"
+            DEFINE_SDPTYPE_MEDIA_TITLE + "First Video Stream in 2022-7 Group"
         str_media_info_video_second = \
-            DEFINE_SDPTYPE_MEDIA_TITLE + "Second Video Stream Description"
+            DEFINE_SDPTYPE_MEDIA_TITLE + "Second Video Stream in 2022-7 Group"
         str_media_video_dest_mcaddr_second = MainWindow.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.text()
         str_media_video_dest_mcport_second = MainWindow.ui.lineEdit_Media_Video_Second_Dest_Mcast_Port.text()
         str_media_conn_video_second = \
@@ -416,10 +385,6 @@ def configSDP() -> bool:
             DEFINE_SDPVALUE_NETTYPE + DEFINE_NBSP + \
             DEFINE_SDPVALUE_ADDRTYPE + DEFINE_NBSP + \
             str_media_video_dest_mcaddr_second + "/" + str_media_ttl_video
-        str_media_rtpmap_video_second = \
-            DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_RTPMAP + \
-            str_media_video_dest_mcport_second + DEFINE_NBSP + \
-            DEFINE_SDPVALUE_MEDIA_SUBTYPE_VIDEO + DEFINE_SDPVALUE_MEDIA_CLOCKRATE_VIDEO
         str_media_id_video_first = \
             DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_ID + \
             DEFINE_SDPVALUE_GROUP_FIRST
@@ -428,16 +393,16 @@ def configSDP() -> bool:
             DEFINE_SDPVALUE_GROUP_SECOND
     else:
         str_media_info_video_first = \
-            DEFINE_SDPTYPE_MEDIA_TITLE + "Video Stream Description"
+            DEFINE_SDPTYPE_MEDIA_TITLE + "Video Stream"
 
     str_media_conn_video_first = \
         DEFINE_SDPTYPE_MEDIA_CONN_INFO + \
         DEFINE_SDPVALUE_NETTYPE + DEFINE_NBSP + \
         DEFINE_SDPVALUE_ADDRTYPE + DEFINE_NBSP + \
         str_media_video_dest_mcaddr_first + "/" + str_media_ttl_video
-    str_media_rtpmap_video_first = \
+    str_media_rtpmap_video = \
         DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_RTPMAP + \
-        str_media_video_dest_mcport_first + DEFINE_NBSP + \
+        DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_VIDEO + DEFINE_NBSP + \
         DEFINE_SDPVALUE_MEDIA_SUBTYPE_VIDEO + DEFINE_SDPVALUE_MEDIA_CLOCKRATE_VIDEO
     str_media_fmtp_video = \
         DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_FMTP + \
@@ -464,6 +429,120 @@ def configSDP() -> bool:
         DEFINE_SDPPARAM_VIDEO_FMTP_TROFF + \
         DEFINE_SDPVALUE_FMTP_PARAM_TROFF + DEFINE_NBSP + \
         DEFINE_SDPPARAM_VIDEO_FMTP_SSN + DEFINE_SDPVALUE_FMTP_PARAM_SSN
+
+    # Audio (Sole, or first+second; incl. media desc, info, conn, rtpmap, fmtp)
+    str_media_audio_dest_mcport_first = MainWindow.ui.lineEdit_Media_Audio_First_Dest_Mcast_Port.text()
+    str_media_desc_audio_first = \
+        DEFINE_SDPTYPE_MEDIA + DEFINE_SDPVALUE_MEDIA_TYPE_AUDIO + DEFINE_NBSP + \
+        str_media_audio_dest_mcport_first + DEFINE_NBSP + \
+        DEFINE_SDPVALUE_MEDIA_PROTOCOL_AUDIO + DEFINE_NBSP
+    for i in range(4):
+        if comboboxes_audio_format[i].currentIndex() != 0:
+            str_media_desc_audio_first += DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO[i]
+            str_media_desc_audio_first += " "
+    str_media_audio_dest_mcaddr_first = MainWindow.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.text()
+    str_media_audio_dest_mcport_first = MainWindow.ui.lineEdit_Media_Audio_First_Dest_Mcast_Port.text()
+    str_media_ttl_audio = MainWindow.ui.lineEdit_Media_Conn_TTL.text()
+
+    if MainWindow.ui.checkBox_Media_DUP.isChecked():
+        str_media_audio_dest_mcport_second = MainWindow.ui.lineEdit_Media_Audio_Second_Dest_Mcast_Port.text()
+        str_media_desc_audio_second = \
+            DEFINE_SDPTYPE_MEDIA + DEFINE_SDPVALUE_MEDIA_TYPE_AUDIO + DEFINE_NBSP + \
+            str_media_audio_dest_mcport_second + DEFINE_NBSP + \
+            DEFINE_SDPVALUE_MEDIA_PROTOCOL_AUDIO + DEFINE_NBSP
+        for i in range(4):
+            if comboboxes_audio_format[i].currentIndex() != 0:
+                str_media_desc_audio_second += DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO[i]
+                str_media_desc_audio_second += " "
+        str_media_info_audio_first = \
+            DEFINE_SDPTYPE_MEDIA_TITLE + "First Audio Stream in 2022-7 Group. "
+        str_media_info_audio_second = \
+            DEFINE_SDPTYPE_MEDIA_TITLE + "Second Audio Stream in 2022-7 Group. "
+        for i in range(4):
+            if comboboxes_audio_format[i].currentIndex() != 0 and comboboxes_audio_trackqty[i].isEnabled():
+                if i > 0:
+                    str_media_info_audio_first += ", and "
+                    str_media_info_audio_second += ", and "
+                str_media_info_audio_first += comboboxes_audio_trackqty[i].currentText()
+                str_media_info_audio_second += comboboxes_audio_trackqty[i].currentText()
+                str_media_info_audio_first += " channels"
+                str_media_info_audio_second += " channels"
+                if comboboxes_audio_format[i].currentIndex() == 1:
+                    str_media_info_audio_first += " PCM Standard Stereo (L,R) "
+                    str_media_info_audio_second += " PCM Standard Stereo (L,R) "
+                elif comboboxes_audio_format[i].currentIndex() == 2:
+                    str_media_info_audio_first += " PCM 5.1 Surround (L,R,C,LFE,Ls,Rs) "
+                    str_media_info_audio_second += " PCM 5.1 Surround (L,R,C,LFE,Ls,Rs) "
+                elif comboboxes_audio_format[i].currentIndex() == 3:
+                    str_media_info_audio_first += " DolbyE Compressed in AES3 frame "
+                    str_media_info_audio_second += " DolbyE Compressed in AES3 frame "
+                str_media_info_audio_first += comboboxes_audio_sample_size[i].currentText()
+                str_media_info_audio_second += comboboxes_audio_sample_size[i].currentText()
+                str_media_info_audio_first += " samples"
+                str_media_info_audio_second += " samples"
+        str_media_audio_dest_mcaddr_second = MainWindow.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.text()
+        str_media_audio_dest_mcport_second = MainWindow.ui.lineEdit_Media_Audio_Second_Dest_Mcast_Port.text()
+        str_media_conn_audio_second = \
+            DEFINE_SDPTYPE_MEDIA_CONN_INFO + \
+            DEFINE_SDPVALUE_NETTYPE + DEFINE_NBSP + \
+            DEFINE_SDPVALUE_ADDRTYPE + DEFINE_NBSP + \
+            str_media_audio_dest_mcaddr_second + "/" + str_media_ttl_audio
+        str_media_id_audio_first = \
+            DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_ID + \
+            DEFINE_SDPVALUE_GROUP_FIRST
+        str_media_id_audio_second = \
+            DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_ID + \
+            DEFINE_SDPVALUE_GROUP_SECOND
+    else:
+        str_media_info_audio_first = \
+            DEFINE_SDPTYPE_MEDIA_TITLE + "Audio Stream: "
+        for i in range(4):
+            if comboboxes_audio_format[i].currentIndex() != 0 and comboboxes_audio_trackqty[i].isEnabled():
+                if i > 0:
+                    str_media_info_audio_first += ", and "
+                str_media_info_audio_first += comboboxes_audio_trackqty[i].currentText()
+                str_media_info_audio_first += " channels"
+                if comboboxes_audio_format[i].currentIndex() == 1:
+                    str_media_info_audio_first += " PCM Standard Stereo (L,R) "
+                elif comboboxes_audio_format[i].currentIndex() == 2:
+                    str_media_info_audio_first += " PCM 5.1 Surround (L,R,C,LFE,Ls,Rs) "
+                elif comboboxes_audio_format[i].currentIndex() == 3:
+                    str_media_info_audio_first += " DolbyE Compressed in AES3 frame "
+                str_media_info_audio_first += comboboxes_audio_sample_size[i].currentText()
+                str_media_info_audio_first += " samples"
+        str_media_conn_audio_first = \
+            DEFINE_SDPTYPE_MEDIA_CONN_INFO + \
+            DEFINE_SDPVALUE_NETTYPE + DEFINE_NBSP + \
+            DEFINE_SDPVALUE_ADDRTYPE + DEFINE_NBSP + \
+            str_media_audio_dest_mcaddr_first + "/" + str_media_ttl_audio
+
+    for i in range(4):
+        if comboboxes_audio_format[i].currentIndex() != 0 and comboboxes_audio_trackqty[i].isEnabled():
+            str_media_rtpmap_audio[i] = \
+                DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_RTPMAP + \
+                DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO[i] + DEFINE_NBSP
+            if comboboxes_audio_sample_size[i].currentText() == "24bit":
+                if comboboxes_audio_format[i].currentIndex() == 3:
+                    str_media_rtpmap_audio[i] += DEFEIN_SDPVALUE_MEDIA_SUBTYPE_AUDIO_AES3
+                else:
+                    str_media_rtpmap_audio[i] += DEFEIN_SDPVALUE_MEDIA_SUBTYPE_AUDIO_L24
+            elif comboboxes_audio_sample_size[i].currentText() == "16bit":
+                str_media_rtpmap_audio[i] += DEFEIN_SDPVALUE_MEDIA_SUBTYPE_AUDIO_L16
+            elif comboboxes_audio_sample_size[i].currentText() == "32bit":
+                str_media_rtpmap_audio[i] += DEFEIN_SDPVALUE_MEDIA_SUBTYPE_AUDIO_L32
+            str_media_rtpmap_audio[i] += DEFEIN_SDPVALUE_MEDIA_AUDIO_SAMPLING_RATE
+            str_media_rtpmap_audio[i] += comboboxes_audio_trackqty[i].currentText()
+
+            str_media_fmtp_audio[i] = \
+                DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_FMTP + \
+                DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_AUDIO[i] + DEFINE_NBSP + \
+                DEFINE_SDPPARAM_AUDIO_CHANNELORDER
+            if comboboxes_audio_format[i].currentIndex() == 1:
+                str_media_fmtp_audio[i] += DEFINE_SDPVALUE_AUDIO_CHANNELORDER_ST
+            elif comboboxes_audio_format[i].currentIndex() == 2:
+                str_media_fmtp_audio[i] += DEFINE_SDPVALUE_AUDIO_CHANNELORDER_51
+            elif comboboxes_audio_format[i].currentIndex() == 3:
+                str_media_fmtp_audio[i] += DEFINE_SDPVALUE_AUDIO_CHANNELORDER_AES3
 
     # reference clock
     str_ptp_grandmaster_id = MainWindow.ui.lineEdit_Sess_PTP_GMID.text()
@@ -539,11 +618,11 @@ def configSDP() -> bool:
     # Video SDP
     MainWindow.ui.listWidget_SDPPreview.clear()
     MainWindow.ui.listWidget_SDPPreview.setStyleSheet("alternate-background-color: #DEEAF6")
+    MainWindow.ui.listWidget_SDPPreview.addItem("#########  Video  #########")
     MainWindow.ui.listWidget_SDPPreview.addItem(str_proto_ver)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_origin)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_name_video)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_info_video)
-    MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_email)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_time)
     if MainWindow.ui.checkBox_Media_DUP.isChecked():
         MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_group)
@@ -552,7 +631,7 @@ def configSDP() -> bool:
     MainWindow.ui.listWidget_SDPPreview.addItem(str_media_desc_video_first)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_media_info_video_first)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_media_conn_video_first)
-    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_rtpmap_video_first)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_rtpmap_video)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_media_fmtp_video)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_media_refclk)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_media_clock_isdirect)
@@ -562,18 +641,17 @@ def configSDP() -> bool:
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_desc_video_second)
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_info_video_second)
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_conn_video_second)
-        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_rtpmap_video_second)
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_rtpmap_video)
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_fmtp_video)
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_refclk)
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_clock_isdirect)
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_id_video_second)
     # Audio SDP
-    MainWindow.ui.listWidget_SDPPreview.addItem(" ")
+    MainWindow.ui.listWidget_SDPPreview.addItem("#########  Audio  #########")
     MainWindow.ui.listWidget_SDPPreview.addItem(str_proto_ver)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_origin)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_name_audio)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_info_audio)
-    MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_email)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_time)
     if MainWindow.ui.checkBox_Media_DUP.isChecked():
         MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_group)
@@ -582,8 +660,10 @@ def configSDP() -> bool:
     MainWindow.ui.listWidget_SDPPreview.addItem(str_media_desc_audio_first)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_media_info_audio_first)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_media_conn_audio_first)
-    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_rtpmap_audio_first)
-    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_fmtp_audio)
+    for i in range(4):
+        if str_media_rtpmap_audio[i] != "":
+            MainWindow.ui.listWidget_SDPPreview.addItem(str_media_rtpmap_audio[i])
+            MainWindow.ui.listWidget_SDPPreview.addItem(str_media_fmtp_audio[i])
     MainWindow.ui.listWidget_SDPPreview.addItem(str_ptime)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_media_refclk)
     MainWindow.ui.listWidget_SDPPreview.addItem(str_media_clock_isdirect)
@@ -593,8 +673,10 @@ def configSDP() -> bool:
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_desc_audio_second)
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_info_audio_second)
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_conn_audio_second)
-        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_rtpmap_audio_second)
-        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_fmtp_audio)
+        for i in range(4):
+            if str_media_rtpmap_audio[i] != "":
+                MainWindow.ui.listWidget_SDPPreview.addItem(str_media_rtpmap_audio[i])
+                MainWindow.ui.listWidget_SDPPreview.addItem(str_media_fmtp_audio[i])
         MainWindow.ui.listWidget_SDPPreview.addItem(str_ptime)
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_refclk)
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_clock_isdirect)
@@ -694,11 +776,11 @@ class Main(QMainWindow):
         self.ui.ip4Edit_origin_IpAddr.setAlignment(QtCore.Qt.AlignCenter)
 
         self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.centralwidget)
-        self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 370, 121, 21))
+        self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 350, 121, 21))
         self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
 
         self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.centralwidget)
-        self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 440, 121, 21))
+        self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 420, 121, 21))
         self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
 
         self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.centralwidget)
@@ -717,7 +799,7 @@ class Main(QMainWindow):
         self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 780, 121, 21))
         self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
 
-        def checkBox_Media_Video_DUP_Clicked():
+        def checkBox_Media_DUP_Clicked():
             if self.ui.checkBox_Media_DUP.isChecked():
                 self.ui.label_Media_Video_First_Dest.setText("First Destination:")
                 self.ui.label_Media_Video_Second_Dest.show()
@@ -981,7 +1063,7 @@ class Main(QMainWindow):
 
         # C-10 single object
         self.ui.pushButton_GenSDP.clicked.connect(pushButton_GenSDP_Clicked)
-        self.ui.checkBox_Media_DUP.clicked.connect(checkBox_Media_Video_DUP_Clicked)
+        self.ui.checkBox_Media_DUP.clicked.connect(checkBox_Media_DUP_Clicked)
         self.ui.comboBox_Audio_Format_Ch1and2.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch1and2)
         self.ui.comboBox_Audio_Format_Ch3and4.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch3and4)
         self.ui.comboBox_Audio_Format_Ch5and6.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch5and6)
@@ -996,7 +1078,7 @@ class Main(QMainWindow):
             slot_combobox_indexchanged_trackqty_ch7and8)
 
         # D-init value for each radio button group
-        checkBox_Media_Video_DUP_Clicked()
+        checkBox_Media_DUP_Clicked()
         slot_radiobtn_clicked_dirmodel()
         slot_radiobtn_clicked_res()
         slot_radiobtn_clicked_tcs()
