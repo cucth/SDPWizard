@@ -309,11 +309,11 @@ def configSDP() -> bool:
         ", output on Tap#" + str_tap_id + "-" + str_tap_channel
     # Session Name - ANC
     str_sess_name_anc = \
-        DEFINE_SDPTYPE_SESS_NAME + "ANC Data SDP file for Channel-" + \
+        DEFINE_SDPTYPE_SESS_NAME + "Ancillary Data SDP file for Channel-" + \
         str_channel_name + "-" + str_channel_role + \
         ", output on Tap#" + str_tap_id + "-" + str_tap_channel
 
-    # Session Information - Video, Audio
+    # Session Information - Video, Audio, ANC
     str_sess_info_video = \
         DEFINE_SDPTYPE_SESS_INFO + str_media_video_fmtp_value_height[0:-1]
     if str_media_video_fmtp_value_interlace == "interlace; ":
@@ -332,9 +332,11 @@ def configSDP() -> bool:
 
     str_sess_info_video += " Video Stream, ST 2110-20"
     str_sess_info_audio = DEFINE_SDPTYPE_SESS_INFO + "Audio Stream Pair, ST 2110-30/31"
+    str_sess_info_anc = DEFINE_SDPTYPE_SESS_INFO + "Ancillary Data Stream, ST 2110-40"
     if MainWindow.ui.checkBox_Media_DUP.isChecked():
         str_sess_info_video += " with ST 2022-7"
         str_sess_info_audio += " with ST 2022-7"
+        str_sess_info_anc += " with ST 2022-7"
 
     # Session Active Time
     str_sess_time = \
@@ -544,6 +546,56 @@ def configSDP() -> bool:
             elif comboboxes_audio_format[i].currentIndex() == 3:
                 str_media_fmtp_audio[i] += DEFINE_SDPVALUE_AUDIO_CHANNELORDER_AES3
 
+    # ANC (Sole, or first+second; incl. media desc, info, conn, rtpmap)
+    str_media_anc_dest_mcport_first = MainWindow.ui.lineEdit_Media_ANC_First_Dest_Mcast_Port.text()
+    str_media_desc_anc_first = \
+        DEFINE_SDPTYPE_MEDIA + DEFINE_SDPVALUE_MEDIA_TYPE_ANC + DEFINE_NBSP + \
+        str_media_anc_dest_mcport_first + DEFINE_NBSP + \
+        DEFINE_SDPVALUE_MEDIA_PROTOCOL_ANC + DEFINE_NBSP +\
+        DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_ANC
+
+    str_media_anc_dest_mcaddr_first = MainWindow.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.text()
+    str_media_anc_dest_mcport_first = MainWindow.ui.lineEdit_Media_ANC_First_Dest_Mcast_Port.text()
+    str_media_ttl_anc = MainWindow.ui.lineEdit_Media_Conn_TTL.text()
+
+    if MainWindow.ui.checkBox_Media_DUP.isChecked():
+        str_media_anc_dest_mcport_second = MainWindow.ui.lineEdit_Media_ANC_Second_Dest_Mcast_Port.text()
+        str_media_desc_anc_second = \
+            DEFINE_SDPTYPE_MEDIA + DEFINE_SDPVALUE_MEDIA_TYPE_ANC + DEFINE_NBSP + \
+            str_media_anc_dest_mcport_second + DEFINE_NBSP + \
+            DEFINE_SDPVALUE_MEDIA_PROTOCOL_ANC + DEFINE_NBSP
+        str_media_info_anc_first = \
+            DEFINE_SDPTYPE_MEDIA_TITLE + "First ST 291 ANC Data Stream in 2022-7 Group. "
+        str_media_info_anc_second = \
+            DEFINE_SDPTYPE_MEDIA_TITLE + "Second ST 291 ANC Data Stream in 2022-7 Group. "
+
+        str_media_anc_dest_mcaddr_second = MainWindow.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.text()
+        str_media_anc_dest_mcport_second = MainWindow.ui.lineEdit_Media_ANC_Second_Dest_Mcast_Port.text()
+        str_media_conn_anc_second = \
+            DEFINE_SDPTYPE_MEDIA_CONN_INFO + \
+            DEFINE_SDPVALUE_NETTYPE + DEFINE_NBSP + \
+            DEFINE_SDPVALUE_ADDRTYPE + DEFINE_NBSP + \
+            str_media_anc_dest_mcaddr_second + "/" + str_media_ttl_anc
+        str_media_id_anc_first = \
+            DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_ID + \
+            DEFINE_SDPVALUE_GROUP_FIRST
+        str_media_id_anc_second = \
+            DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_ID + \
+            DEFINE_SDPVALUE_GROUP_SECOND
+    else:
+        str_media_info_anc_first = \
+            DEFINE_SDPTYPE_MEDIA_TITLE + "ST 291 ANC Data Stream"
+
+        str_media_conn_anc_first = \
+            DEFINE_SDPTYPE_MEDIA_CONN_INFO + \
+            DEFINE_SDPVALUE_NETTYPE + DEFINE_NBSP + \
+            DEFINE_SDPVALUE_ADDRTYPE + DEFINE_NBSP + \
+            str_media_anc_dest_mcaddr_first + "/" + str_media_ttl_anc
+    str_media_rtpmap_anc = \
+        DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_RTPMAP + \
+        DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_ANC + DEFINE_NBSP + \
+        DEFINE_SDPVALUE_MEDIA_SUBTYPE_ANC + DEFINE_SDPVALUE_MEDIA_CLOCKRATE_ANC
+
     # reference clock
     str_ptp_grandmaster_id = MainWindow.ui.lineEdit_Sess_PTP_GMID.text()
     str_ptp_domain = MainWindow.ui.lineEdit_Sess_PTP_Domain.text()
@@ -681,7 +733,35 @@ def configSDP() -> bool:
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_refclk)
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_clock_isdirect)
         MainWindow.ui.listWidget_SDPPreview.addItem(str_media_id_video_second)
+    # ANC SDP
+    MainWindow.ui.listWidget_SDPPreview.addItem("#########  ANC  #########")
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_proto_ver)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_origin)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_name_anc)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_info_anc)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_time)
+    if MainWindow.ui.checkBox_Media_DUP.isChecked():
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_group)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_sess_tool)
+    MainWindow.ui.listWidget_SDPPreview.addItem("-------------")
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_desc_anc_first)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_info_anc_first)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_conn_anc_first)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_rtpmap_anc)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_refclk)
+    MainWindow.ui.listWidget_SDPPreview.addItem(str_media_clock_isdirect)
+    if MainWindow.ui.checkBox_Media_DUP.isChecked():
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_id_anc_first)
+        MainWindow.ui.listWidget_SDPPreview.addItem("-------------")
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_desc_anc_second)
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_info_anc_second)
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_conn_anc_second)
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_rtpmap_anc)
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_refclk)
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_clock_isdirect)
+        MainWindow.ui.listWidget_SDPPreview.addItem(str_media_id_anc_second)
 
+    # clear variables
     comboboxes_audio_format.clear()
     comboboxes_audio_trackqty.clear()
     comboboxes_audio_sample_size.clear()
