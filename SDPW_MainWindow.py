@@ -66,7 +66,7 @@ class Ui_Main(object):
         self.checkBox_Sess_Generate_ID.setSizePolicy(sizePolicy)
         self.checkBox_Sess_Generate_ID.setObjectName("checkBox_Sess_Generate_ID")
         self.pushButton_GenSDP = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_GenSDP.setGeometry(QtCore.QRect(742, 800, 151, 32))
+        self.pushButton_GenSDP.setGeometry(QtCore.QRect(750, 800, 151, 32))
         self.pushButton_GenSDP.setObjectName("pushButton_GenSDP")
         self.label_Sess_ID = QtWidgets.QLabel(self.centralwidget)
         self.label_Sess_ID.setGeometry(QtCore.QRect(10, 110, 81, 16))
