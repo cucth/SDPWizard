@@ -795,7 +795,6 @@ def configSDP() -> bool:
     MainWindow.ui.listWidget_SDPPreview_SDPS.addItem(str_filename_sdp_video)
     MainWindow.ui.listWidget_SDPPreview_SDPS.addItem(str_filename_sdp_audio)
     MainWindow.ui.listWidget_SDPPreview_SDPS.addItem(str_filename_sdp_anc)
-
     MainWindow.ui.tabWidget_SDPPreview.setCurrentIndex(0)
     MainWindow.ui.pushButton_SavetoFile.setEnabled(True)
 
