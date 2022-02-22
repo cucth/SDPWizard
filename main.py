@@ -1,6 +1,7 @@
+import _io
 import sys
 import os
-from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, QWidget, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, QWidget, QFileDialog, QMessageBox
 # from PyQt5.QtGui import QRegExpValidator, QIntValidator
 from PyQt5 import QtCore
 import SDPW_MainWindow
@@ -161,8 +162,8 @@ str_media_id_anc_second: str = ""
 str_channel_name: str = ""
 str_channel_role: str = ""
 str_channel_role_short: str = ""
-str_tap_channel: str = ""
 str_tap_id: str = ""
+str_tap_channel: str = ""
 str_ptime: str = ""
 str_filename_sdp_video: str = ""
 str_filename_sdp_audio: str = ""
@@ -174,6 +175,7 @@ flag_is_slot_calling: bool = False
 comboboxes_audio_format: list[QWidget] = []
 comboboxes_audio_trackqty: list[QWidget] = []
 comboboxes_audio_sample_size: list[QWidget] = []
+file: _io.TextIOWrapper
 
 
 def configSDP() -> bool:
@@ -253,8 +255,8 @@ def configSDP() -> bool:
     global str_channel_name
     global str_channel_role
     global str_channel_role_short
-    global str_tap_channel
     global str_tap_id
+    global str_tap_channel
     global str_ptime
     global comboboxes_audio_format
     global comboboxes_audio_trackqty
@@ -813,8 +815,56 @@ def savetoFile() -> bool:
     global str_filename_sdps
     global str_output_path
     global str_sub_path
+    global str_tap_id
+    global str_tap_channel
+    global file
+
     str_output_path = QFileDialog.getExistingDirectory(None, "Choose Output Directory", os.getcwd())
     print(str_output_path)
+    os.chdir(str_output_path or os.getcwd())
+    str_sub_path = "Tap" + str_tap_id + str_tap_channel
+    try:
+        os.mkdir(str_sub_path)
+    except FileExistsError:
+        print("文件夹已存在")
+    os.chdir(str_output_path+"/"+str_sub_path)
+    print(os.getcwd())
+    try:
+        file = open(str_filename_sdp_video, 'w')
+        for i in range(MainWindow.ui.listWidget_SDPPreview_Video.count()):
+            file.write(MainWindow.ui.listWidget_SDPPreview_Video.item(i).text())
+            file.write("\r\n")
+    finally:
+        if file:
+            file.close()
+
+    try:
+        file = open(str_filename_sdp_audio, 'w')
+        for i in range(MainWindow.ui.listWidget_SDPPreview_Audio.count()):
+            file.write(MainWindow.ui.listWidget_SDPPreview_Audio.item(i).text())
+            file.write("\r\n")
+    finally:
+        if file:
+            file.close()
+    try:
+        file = open(str_filename_sdp_anc, 'w')
+        for i in range(MainWindow.ui.listWidget_SDPPreview_ANC.count()):
+            file.write(MainWindow.ui.listWidget_SDPPreview_ANC.item(i).text())
+            file.write("\r\n")
+    finally:
+        if file:
+            file.close()
+    try:
+        file = open(str_filename_sdps, 'w')
+        for i in range(MainWindow.ui.listWidget_SDPPreview_SDPS.count()):
+            file.write(MainWindow.ui.listWidget_SDPPreview_SDPS.item(i).text())
+            file.write("\r\n")
+    finally:
+        if file:
+            file.close()
+
+    QMessageBox.information(None, "SDP files exported.", QMessageBox.Ok)
+
     return True
 
 
@@ -1027,6 +1077,7 @@ class Main(QMainWindow):
         # B-0-Slot for buttons
         def pushButton_GenSDP_Clicked():
             configSDP()
+
         def pushButton_SavetoFile_Clicked():
             savetoFile()
 
