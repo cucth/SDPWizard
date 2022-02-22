@@ -821,15 +821,16 @@ def savetoFile() -> bool:
     global file
 
     str_output_path = QFileDialog.getExistingDirectory(None, "Choose Output Directory", os.getcwd())
-    print(str_output_path)
     os.chdir(str_output_path or os.getcwd())
     str_sub_path = "Tap" + str_tap_id + str_tap_channel
+
     try:
         os.mkdir(str_sub_path)
     except FileExistsError:
-        print("文件夹已存在")
-    os.chdir(str_output_path+"/"+str_sub_path)
-    print(os.getcwd())
+        pass
+
+    os.chdir(str_output_path or os.getcwd() + "/" + str_sub_path)
+
     try:
         file = open(str_filename_sdp_video, 'w')
         for i in range(MainWindow.ui.listWidget_SDPPreview_Video.count()):
@@ -847,6 +848,7 @@ def savetoFile() -> bool:
     finally:
         if file:
             file.close()
+
     try:
         file = open(str_filename_sdp_anc, 'w')
         for i in range(MainWindow.ui.listWidget_SDPPreview_ANC.count()):
@@ -855,6 +857,7 @@ def savetoFile() -> bool:
     finally:
         if file:
             file.close()
+
     try:
         file = open(str_filename_sdps, 'w')
         for i in range(MainWindow.ui.listWidget_SDPPreview_SDPS.count()):
@@ -864,9 +867,15 @@ def savetoFile() -> bool:
         if file:
             file.close()
 
-    QMessageBox.information(None, "", "\nSDP files exported.", QMessageBox.Ok)
-
-    return True
+    try:
+        if os.path.getsize(str_filename_sdp_video) > 0:
+            QMessageBox.information(None, "", "\nSDP files exported.", QMessageBox.Ok)
+            return True
+        else:
+            QMessageBox.Warning(None, "", "\nSDP files export FAILED.", QMessageBox.Ok)
+            return False
+    except IOError:
+        return False
 
 
 def refresh_audio_combobox():
@@ -903,19 +912,19 @@ def refresh_audio_combobox():
             comboboxes_audio_trackqty[i].clear()
             comboboxes_audio_trackqty[i].setDisabled(True)
             comboboxes_audio_sample_size[i].setDisabled(True)
-            for j in range(i + 1, 4):  # 下面行逐行清空值并失效
+            for j in range(i + 1, 4):  # Clear and disable lower lines
                 comboboxes_audio_format[j].setCurrentIndex(0)
                 comboboxes_audio_format[j].setDisabled(True)
                 comboboxes_audio_trackqty[j].clear()
                 comboboxes_audio_trackqty[j].setDisabled(True)
                 comboboxes_audio_sample_size[j].setDisabled(True)
             break
-        elif comboboxes_audio_format[i].currentIndex() == 0 and i == 3:  # if ch7&8 is None
+        elif comboboxes_audio_format[i].currentIndex() == 0 and i == 3:  # if ch7&8 is "None"
             comboboxes_audio_trackqty[i].clear()
             comboboxes_audio_trackqty[i].setDisabled(True)
             comboboxes_audio_sample_size[i].setDisabled(True)
             break
-        elif comboboxes_audio_format[i].currentIndex() in (1, 3):  # if value is PCM-ST, or DolbyE in AES
+        elif comboboxes_audio_format[i].currentIndex() in (1, 3):  # if value is PCM-ST, or DolbyE in AES frame
             if comboboxes_audio_trackqty[i].count() != 0:
                 track_qty_selected_in_current_line = comboboxes_audio_trackqty[i].currentText()
                 comboboxes_audio_trackqty[i].clear()
@@ -958,28 +967,28 @@ class Main(QMainWindow):
         self.ui.ip4Edit_origin_IpAddr.setGeometry(QtCore.QRect(240, 170, 121, 21))
         self.ui.ip4Edit_origin_IpAddr.setAlignment(QtCore.Qt.AlignCenter)
 
-        self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.centralwidget)
-        self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 350, 121, 21))
+        self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_Video)
+        self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(10, 50, 121, 21))
         self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
 
-        self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.centralwidget)
-        self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 420, 121, 21))
+        self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_Video)
+        self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(10, 100, 121, 21))
         self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
 
-        self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.centralwidget)
-        self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 560, 121, 21))
+        self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_Audio)
+        self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(10, 50, 121, 21))
         self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
 
-        self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.centralwidget)
-        self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 630, 121, 21))
+        self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_Audio)
+        self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(10, 100, 121, 21))
         self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
 
-        self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.centralwidget)
-        self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 710, 121, 21))
+        self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_ANC)
+        self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(10, 40, 121, 21))
         self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
 
-        self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.centralwidget)
-        self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(470, 780, 121, 21))
+        self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_ANC)
+        self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(230, 40, 121, 21))
         self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
 
         def checkBox_Media_DUP_Clicked():

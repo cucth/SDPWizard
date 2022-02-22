@@ -1,10 +1,10 @@
 # 版权声明：本文为CSDN博主「softdzf」的原创文章，遵循CC
 # 4.0
 # BY - SA版权协议，转载请附上原文出处链接及本声明。
-# 原文链接：https: // blog.csdn.net / softdzf / article / details / 6624046
+# 原文链接：https://blog.csdn.net/softdzf/article/details/6624046
 
 # Original code was implemented with Python2 + PyQt4.
-# CSUN adapted with Python3 + PyQt5 in Feb 2022
+# CSUN modified with Python3 + PyQt5 in Feb 2022
 
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
