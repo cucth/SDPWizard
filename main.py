@@ -863,7 +863,7 @@ def savetoFile() -> bool:
         if file:
             file.close()
 
-    QMessageBox.information(None, "SDP files exported.", QMessageBox.Ok)
+    QMessageBox.information(None, "", "\nSDP files exported.", QMessageBox.Ok)
 
     return True
 
