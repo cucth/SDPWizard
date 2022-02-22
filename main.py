@@ -794,6 +794,7 @@ def configSDP() -> bool:
         MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_media_clock_isdirect)
         MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_media_id_anc_second)
     # Channel SDPS
+    MainWindow.ui.listWidget_SDPPreview_SDPS.clear()
     MainWindow.ui.listWidget_SDPPreview_SDPS.addItem(str_filename_sdp_video)
     MainWindow.ui.listWidget_SDPPreview_SDPS.addItem(str_filename_sdp_audio)
     MainWindow.ui.listWidget_SDPPreview_SDPS.addItem(str_filename_sdp_anc)
