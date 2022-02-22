@@ -163,7 +163,7 @@
    <widget class="QPushButton" name="pushButton_GenSDP">
     <property name="geometry">
      <rect>
-      <x>750</x>
+      <x>742</x>
       <y>800</y>
       <width>151</width>
       <height>32</height>

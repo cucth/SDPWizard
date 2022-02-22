@@ -815,7 +815,6 @@ def savetoFile() -> bool:
     global str_sub_path
     str_output_path = QFileDialog.getExistingDirectory(None, "Choose Output Directory", os.getcwd())
     print(str_output_path)
-
     return True
 
 
