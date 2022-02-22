@@ -798,6 +798,7 @@ def configSDP() -> bool:
 
     MainWindow.ui.tabWidget_SDPPreview.setCurrentIndex(0)
     MainWindow.ui.pushButton_SavetoFile.setEnabled(True)
+
     # clear variables
     comboboxes_audio_format.clear()
     comboboxes_audio_trackqty.clear()
