@@ -64,6 +64,7 @@ class IpPartEdit(QLineEdit):
 class Ip4Edit(QLineEdit):
     def __init__(self, parent=None):
         QLineEdit.__init__(self, parent)
+        self.setFocusPolicy(Qt.NoFocus)
 
         self.ip_part1 = IpPartEdit()
         self.ip_part2 = IpPartEdit()

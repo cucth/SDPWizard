@@ -1,6 +1,7 @@
 import _io
 import sys
 import os
+from datetime import datetime
 from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, QWidget, QFileDialog, QMessageBox
 # from PyQt5.QtGui import QRegExpValidator, QIntValidator
 from PyQt5 import QtCore
@@ -171,6 +172,7 @@ str_filename_sdp_anc: str = ""
 str_filename_sdps: str = ""
 str_output_path: str = ""
 str_sub_path: str = ""
+str_ntp_timestamp: str = ""
 flag_is_slot_calling: bool = False
 comboboxes_audio_format: list[QWidget] = []
 comboboxes_audio_trackqty: list[QWidget] = []
@@ -266,6 +268,7 @@ def configSDP() -> bool:
     global str_filename_sdp_anc
     global str_filename_sdps
     global str_sub_path
+    global str_ntp_timestamp
 
     str_proto_ver = DEFINE_SDPTYPE_PROTO_VER + DEFINE_SDPVALUE_PROTO_VER
     str_sess_id = MainWindow.ui.lineEdit_Sess_ID.text()
@@ -650,6 +653,7 @@ def configSDP() -> bool:
 
     # F-validate input values
     def display_alarm(set_focus_QWidget, str_alarm):
+        MainWindow.ui.tabWidget_SDPPreview.setCurrentIndex(0)
         MainWindow.ui.listWidget_SDPPreview_Video.clear()
         MainWindow.ui.listWidget_SDPPreview_Video.setStyleSheet("color: red; alternate-background-color: #DEEAF6")
         MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_alarm)
@@ -829,7 +833,7 @@ def savetoFile() -> bool:
     except FileExistsError:
         pass
 
-    os.chdir(str_output_path or os.getcwd() + "/" + str_sub_path)
+    os.chdir((str_output_path or os.getcwd()) + "/" + str_sub_path)
 
     try:
         file = open(str_filename_sdp_video, 'w')
@@ -964,7 +968,7 @@ class Main(QMainWindow):
         self.ui.setupUi(self)
 
         self.ui.ip4Edit_origin_IpAddr = IP4Edit.Ip4Edit(self.ui.centralwidget)
-        self.ui.ip4Edit_origin_IpAddr.setGeometry(QtCore.QRect(240, 170, 121, 21))
+        self.ui.ip4Edit_origin_IpAddr.setGeometry(QtCore.QRect(260, 130, 121, 21))
         self.ui.ip4Edit_origin_IpAddr.setAlignment(QtCore.Qt.AlignCenter)
 
         self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_Video)
@@ -1024,6 +1028,18 @@ class Main(QMainWindow):
                 self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.hide()
                 self.ui.label_Media_ANC_Second_Colon.hide()
                 self.ui.lineEdit_Media_ANC_Second_Dest_Mcast_Port.hide()
+
+        def checkBox_Sess_Generate_ID_Clicked():
+            global str_ntp_timestamp
+            if self.ui.checkBox_Sess_Generate_ID.isChecked():
+                self.ui.lineEdit_Sess_ID.setDisabled(True)
+                self.ui.lineEdit_Sess_Ver.setDisabled(True)
+                str_ntp_timestamp = str(int((datetime.utcnow() - datetime(1900, 1, 1, 0, 0, 0)).total_seconds()))
+                self.ui.lineEdit_Sess_ID.setText(str_ntp_timestamp)
+                self.ui.lineEdit_Sess_Ver.setText(str_ntp_timestamp)
+            else:
+                self.ui.lineEdit_Sess_ID.setEnabled(True)
+                self.ui.lineEdit_Sess_Ver.setEnabled(True)
 
         # A-Radio Button GROUP - Declare Variables for buttons in a group
         # A-1-Dir Model:
@@ -1259,6 +1275,7 @@ class Main(QMainWindow):
         # C-10 single object
         self.ui.pushButton_GenSDP.clicked.connect(pushButton_GenSDP_Clicked)
         self.ui.pushButton_SavetoFile.clicked.connect(pushButton_SavetoFile_Clicked)
+        self.ui.checkBox_Sess_Generate_ID.clicked.connect(checkBox_Sess_Generate_ID_Clicked)
         self.ui.checkBox_Media_DUP.clicked.connect(checkBox_Media_DUP_Clicked)
         self.ui.comboBox_Audio_Format_Ch1and2.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch1and2)
         self.ui.comboBox_Audio_Format_Ch3and4.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch3and4)
@@ -1274,6 +1291,7 @@ class Main(QMainWindow):
             slot_combobox_indexchanged_trackqty_ch7and8)
 
         # D-init value for each radio button group
+        checkBox_Sess_Generate_ID_Clicked()
         checkBox_Media_DUP_Clicked()
         slot_radiobtn_clicked_dirmodel()
         slot_radiobtn_clicked_res()
