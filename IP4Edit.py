@@ -19,6 +19,7 @@ class IpPartEdit(QLineEdit):
         self.setMaxLength(3)
         self.setFrame(False)
         self.setAlignment(Qt.AlignCenter)
+        self.setStyleSheet("font-family: Arial; font-size: 13px")
 
         validator = QIntValidator(0, 255, self)
         self.setValidator(validator)

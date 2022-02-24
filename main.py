@@ -553,11 +553,11 @@ def configSDP() -> bool:
                     str_media_info_audio_first += " DolbyE Compressed in AES3 frame "
                 str_media_info_audio_first += comboboxes_audio_sample_size[i].currentText()
                 str_media_info_audio_first += " samples"
-        str_media_conn_audio_first = \
-            DEFINE_SDPTYPE_MEDIA_CONN_INFO + \
-            DEFINE_SDPVALUE_NETTYPE + DEFINE_NBSP + \
-            DEFINE_SDPVALUE_ADDRTYPE + DEFINE_NBSP + \
-            str_media_audio_dest_mcaddr_first + "/" + str_media_ttl_audio
+    str_media_conn_audio_first = \
+        DEFINE_SDPTYPE_MEDIA_CONN_INFO + \
+        DEFINE_SDPVALUE_NETTYPE + DEFINE_NBSP + \
+        DEFINE_SDPVALUE_ADDRTYPE + DEFINE_NBSP + \
+        str_media_audio_dest_mcaddr_first + "/" + str_media_ttl_audio
 
     for i in range(4):
         if comboboxes_audio_format[i].currentIndex() != 0 \
@@ -629,11 +629,11 @@ def configSDP() -> bool:
         str_media_info_anc_first = \
             DEFINE_SDPTYPE_MEDIA_TITLE + "ST 291 ANC Data Stream"
 
-        str_media_conn_anc_first = \
-            DEFINE_SDPTYPE_MEDIA_CONN_INFO + \
-            DEFINE_SDPVALUE_NETTYPE + DEFINE_NBSP + \
-            DEFINE_SDPVALUE_ADDRTYPE + DEFINE_NBSP + \
-            str_media_anc_dest_mcaddr_first + "/" + str_media_ttl_anc
+    str_media_conn_anc_first = \
+        DEFINE_SDPTYPE_MEDIA_CONN_INFO + \
+        DEFINE_SDPVALUE_NETTYPE + DEFINE_NBSP + \
+        DEFINE_SDPVALUE_ADDRTYPE + DEFINE_NBSP + \
+        str_media_anc_dest_mcaddr_first + "/" + str_media_ttl_anc
     str_media_rtpmap_anc = \
         DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_RTPMAP + \
         DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_ANC + DEFINE_NBSP + \
@@ -655,7 +655,8 @@ def configSDP() -> bool:
     def display_alarm(set_focus_QWidget, str_alarm):
         MainWindow.ui.tabWidget_SDPPreview.setCurrentIndex(0)
         MainWindow.ui.listWidget_SDPPreview_Video.clear()
-        MainWindow.ui.listWidget_SDPPreview_Video.setStyleSheet("color: red; alternate-background-color: #DEEAF6")
+        MainWindow.ui.listWidget_SDPPreview_Video.setStyleSheet(
+            "color: red; font-style: bold; font-size: 20px")
         MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_alarm)
         set_focus_QWidget.setFocus()
 
@@ -713,7 +714,8 @@ def configSDP() -> bool:
     # Generate SDP preview
     # Video SDP
     MainWindow.ui.listWidget_SDPPreview_Video.clear()
-    MainWindow.ui.listWidget_SDPPreview_Video.setStyleSheet("alternate-background-color: #DEEAF6")
+    MainWindow.ui.listWidget_SDPPreview_Video.setStyleSheet(
+        "alternate-background-color: #DEEAF6; font-family: Inconsolata; font-size: 15px")
     MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_proto_ver)
     MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_sess_origin)
     MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_sess_name_video)
