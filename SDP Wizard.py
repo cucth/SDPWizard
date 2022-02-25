@@ -2,10 +2,11 @@ import _io
 import sys
 import os
 from datetime import datetime
-from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, QWidget, QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, QWidget, QFileDialog, QMessageBox, QAction, QDialog
 # from PyQt5.QtGui import QRegExpValidator, QIntValidator
 from PyQt5 import QtCore
 import SDPW_MainWindow
+import Dialog_About
 import IP4Edit
 
 DEFINE_NBSP = " "
@@ -963,11 +964,24 @@ def refresh_audio_combobox():
     return
 
 
+class About(QDialog):
+    def __init__(self):
+        QDialog.__init__(self)
+        self.ui = Dialog_About.Ui_Dlg_About()
+        self.ui.setupUi(self)
+
+
 class Main(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = SDPW_MainWindow.Ui_Main()
         self.ui.setupUi(self)
+
+        self.about_action = QAction("About", self)
+
+        self.menubar = self.menuBar()
+        self.about_menu = self.menubar.addMenu("About")
+        self.about_menu.addAction(self.about_action)
 
         self.ui.ip4Edit_origin_IpAddr = IP4Edit.Ip4Edit(self.ui.centralwidget)
         self.ui.ip4Edit_origin_IpAddr.setGeometry(QtCore.QRect(260, 130, 121, 21))
@@ -1309,5 +1323,7 @@ class Main(QMainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     MainWindow = Main()
+    about_dlg = About()
+    MainWindow.about_action.triggered.connect(about_dlg.show)
     MainWindow.show()
     sys.exit(app.exec_())
