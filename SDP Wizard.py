@@ -2,8 +2,8 @@ import _io
 import sys
 import os
 from datetime import datetime
-from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, QWidget, QFileDialog, QMessageBox, QAction, QDialog
-# from PyQt5.QtGui import QRegExpValidator, QIntValidator
+from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, \
+    QWidget, QFileDialog, QMessageBox, QAction, QDialog
 from PyQt5 import QtCore
 import SDPW_MainWindow
 import Dialog_About
@@ -298,11 +298,71 @@ def configSDP() -> bool:
     str_media_rtpmap_audio = ["", "", "", ""]
     str_media_fmtp_audio = ["", "", "", ""]
 
-    # verify session ID:
+    def verify_mcast_addr(str_mcast_addr_to_verify: str, alarm_focus: QWidget):
+        list_str_mcast_addr_to_verify = str_mcast_addr_to_verify.split(".")
+        for j in list_str_mcast_addr_to_verify[:]:
+            if j == "":
+                display_alarm(alarm_focus.ip_part1, "Please complete input")
+                return False
+        if 223 < int(list_str_mcast_addr_to_verify[0]) < 240:
+            if int(list_str_mcast_addr_to_verify[0]) == 224:
+                if 0 < int(list_str_mcast_addr_to_verify[1]) < 5:
+                    display_alarm(alarm_focus.ip_part2,
+                                  "The destination multicast address is allocate by IANA. \n \
+                                  Allocation by IANA / IETF RFC-5771: \n \
+                                  Address Range                 Size       Designation \n \
+                                  -------------                 ----       ----------- \n \
+                                  224.0.0.0 - 224.0.0.255       (/24)      Local Network Control Block \n \
+                                  224.0.1.0 - 224.0.1.255       (/24)      Internetwork Control Block \n \
+                                  224.0.2.0 - 224.0.255.255     (65024)    AD-HOC Block I \n \
+                                  224.1.0.0 - 224.1.255.255     (/16)      RESERVED \n \
+                                  224.2.0.0 - 224.2.255.255     (/16)      SDP/SAP Block \n \
+                                  224.3.0.0 - 224.4.255.255     (2 /16s)   AD-HOC Block II \n \
+                                  \n \
+                                  Recommend to use 239.0.0.0 - 239.255.255.255"
+                                  )
+                    return False
+            elif int(list_str_mcast_addr_to_verify[0]) == 232:
+                display_alarm(alarm_focus.ip_part1,
+                              "The destination multicast address 232.x.x.x is allocate by IANA \n \
+                              for Source-Specific Multicast(SSM). \n \
+                              Please don't use 232/8 unless SSM is configured."
+                              )
+                return True
+            elif int(list_str_mcast_addr_to_verify[0]) == 233:
+                display_alarm(alarm_focus.ip_part1,
+                              "The destination multicast address is allocate by IANA. \n \
+                              Allocation by IANA / IETF RFC-5771: \n \
+                              Address Range                 Size       Designation \n \
+                              -------------                 ----       ----------- \n \
+                              233.0.0.0 - 233.251.255.255   (16515072) GLOP Block \n \
+                              233.252.0.0 - 233.255.255.255 (/14)      AD-HOC Block III \n \
+                              \n \
+                              Recommend to use 239.0.0.0 - 239.255.255.255"
+                              )
+                return True
+        else:
+            display_alarm(alarm_focus.ip_part1,
+                          "Please enter a valid Multicast IP Address."
+                          )
+            return False
+        return True
 
-    # verify session verison:
-
-    # verify unicast IP address:
+    def verify_mcast_port(str_mcast_port_to_verify: str, alarm_focus: QWidget):
+        if str_mcast_port_to_verify.isdigit():
+            if 0 < int(str_mcast_port_to_verify) < 65535:
+                if int(str_mcast_port_to_verify) < 1024:
+                    display_alarm(alarm_focus,
+                                  "To avoid portantial confliction with system ports, \n \
+                                  It's recommended to set multicast desination port between 1025 - 65535"
+                                  )
+                    return True
+            else:
+                display_alarm(alarm_focus, "Multicast desination port invalid!")
+                return False
+        else:
+            display_alarm(alarm_focus, "Please enter multicast desination port!")
+            return False
 
     # Origin (o=<username> <sess-id> <sess-version> <nettype> <addrtype> <unicast-address>)
     str_sess_origin = \
@@ -661,56 +721,84 @@ def configSDP() -> bool:
         MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_alarm)
         set_focus_QWidget.setFocus()
 
-    # F-1 validate origin unicast IP
-    ipaddrlist = str_origin_unicast_ipaddr.split(".")
-    for i in ipaddrlist:
+    # F-1 verify origin unicast IP
+    ipaddrlist_origin = str_origin_unicast_ipaddr.split(".")
+    for i in ipaddrlist_origin[:]:
         if i == "":
             display_alarm(MainWindow.ui.ip4Edit_origin_IpAddr.ip_part1, "Please complete input")
             return False
-    if int(ipaddrlist[0]) >= 224:
+    if int(ipaddrlist_origin[0]) >= 224:
         display_alarm(MainWindow.ui.ip4Edit_origin_IpAddr.ip_part1,
                       "IP should be unicast address. Multicast or reserved address cannot be used!")
         return False
-    if int(ipaddrlist[0]) == 127:
+    if int(ipaddrlist_origin[0]) == 127:
         display_alarm(MainWindow.ui.ip4Edit_origin_IpAddr.ip_part1,
                       "127.x.x.x is local loopback address. Please use valid unicast address!")
         return False
-    if int(ipaddrlist[0]) == 169 and int(ipaddrlist[1]) == 254:
+    if int(ipaddrlist_origin[0]) == 169 and int(ipaddrlist_origin[1]) == 254:
         display_alarm(MainWindow.ui.ip4Edit_origin_IpAddr.ip_part1,
                       "169.254.x.x is automatic private address. Please use valid unicast address!")
         return False
 
-    # F-2 validate TTL
+    # F-2 verify TTL
     if str_media_ttl_video.isdigit():
         if 0 < int(str_media_ttl_video) < 256:
             pass
         else:
             display_alarm(MainWindow.ui.lineEdit_Media_Conn_TTL,
-                          " TTL should ba larger than 0. Max is 255. Recommended is 64.")
+                          "TTL should ba larger than 0. Max is 255. Recommended is 64.")
 
-    # F-3 validate video first dest mcast address
+    # F-3 verify destination multicast address
+    if not verify_mcast_addr(
+            str_media_video_dest_mcaddr_first,
+            MainWindow.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr):
+        return False
+    if not verify_mcast_addr(
+            str_media_video_dest_mcaddr_second,
+            MainWindow.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr):
+        return False
+    if not verify_mcast_addr(
+            str_media_audio_dest_mcaddr_first,
+            MainWindow.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr):
+        return False
+    if not verify_mcast_addr(
+            str_media_audio_dest_mcaddr_second,
+            MainWindow.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr):
+        return False
+    if not verify_mcast_addr(
+            str_media_anc_dest_mcaddr_first,
+            MainWindow.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr):
+        return False
+    if not verify_mcast_addr(
+            str_media_anc_dest_mcaddr_second,
+            MainWindow.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr):
+        return False
 
-    # F-4 validate video first dest mcast port
-
-    # F-5 validate video second dest mcast address
-
-    # F-6 validate video second dest mcast port
-
-    # F-7 validate audio first dest mcast address
-
-    # F-8 validate audio first dest mcast port
-
-    # F-9 validate audio second dest mcast address
-
-    # F-10 validate audio second dest mcast port
-
-    # F-11 validate ANC first dest mcast address
-
-    # F-12 validate ANC first dest mcast port
-
-    # F-13 validate ANC second dest mcast address
-
-    # F-14 validate ANC second dest mcast port
+    # F-4 verify destination multicast port
+    if not verify_mcast_port(
+            str_media_video_dest_mcport_first,
+            MainWindow.ui.lineEdit_Media_Video_First_Dest_Mcast_Port):
+        return False
+    if not verify_mcast_port(
+            str_media_video_dest_mcport_second,
+            MainWindow.ui.lineEdit_Media_Video_Second_Dest_Mcast_Port):
+        return False
+    if not verify_mcast_port(
+            str_media_audio_dest_mcport_first,
+            MainWindow.ui.lineEdit_Media_Audio_First_Dest_Mcast_Port):
+        return False
+    if not verify_mcast_port(
+            str_media_audio_dest_mcport_second,
+            MainWindow.ui.lineEdit_Media_Audio_Second_Dest_Mcast_Port):
+        return False
+    if not verify_mcast_port(
+            str_media_anc_dest_mcport_first,
+            MainWindow.ui.lineEdit_Media_ANC_First_Dest_Mcast_Port):
+        return False
+    if not verify_mcast_port(
+            str_media_anc_dest_mcport_second,
+            MainWindow.ui.lineEdit_Media_ANC_Second_Dest_Mcast_Port):
+        return False
 
     # Audio Packet Time
     str_ptime = \
