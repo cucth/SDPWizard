@@ -681,6 +681,12 @@ def configSDP() -> bool:
         return False
 
     # F-2 validate TTL
+    if str_media_ttl_video.isdigit():
+        if 0 < int(str_media_ttl_video) < 256:
+            pass
+        else:
+            display_alarm(MainWindow.ui.lineEdit_Media_Conn_TTL,
+                          " TTL should ba larger than 0. Max is 255. Recommended is 64.")
 
     # F-3 validate video first dest mcast address
 
