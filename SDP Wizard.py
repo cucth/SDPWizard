@@ -303,11 +303,11 @@ def configSDP() -> bool:
         # default multicast address:
         """
         239.210.120.011
-        ┆┆┆ ┆┆┆ ┆┆└┈stream ID in channel: 1:first 2: second(in 2022-7 group)
-        ┆┆┆ ┆┆┆ └┴┈┈channel ID
-        ┆┆┆ ┆└┴┈┈┈┈┈stream type: 20:video(ST 2110-20), 30:audio, 40:ANC
-        ┆┆┆ └┈┈┈┈┈┈┈channel role: 1: Main, 2: Backup
-        └┴┴┈┈┈┈┈┈┈┈┈protocol: 210:ST2110, 217:ST2110 with 2022-7
+            ┆┆┆ ┆┆┆ ┆┆└┈stream ID in channel: 1:first 2: second(in 2022-7 group)
+            ┆┆┆ ┆┆┆ └┴┈┈channel ID
+            ┆┆┆ ┆└┴┈┈┈┈┈stream type: 20:video(ST 2110-20), 30:audio, 40:ANC
+            ┆┆┆ └┈┈┈┈┈┈┈channel role: 1: Main, 2: Backup
+            └┴┴┈┈┈┈┈┈┈┈┈protocol: 210:ST2110, 217:ST2110 with 2022-7
         """
         list_str_mcast_addr_to_verify = str_mcast_addr_to_verify.split(".")
         for j in list_str_mcast_addr_to_verify[:]:
