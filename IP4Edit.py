@@ -1,17 +1,9 @@
-# 版权声明：本文为CSDN博主「softdzf」的原创文章，遵循CC
-# 4.0
-# BY - SA版权协议，转载请附上原文出处链接及本声明。
-# 原文链接：https://blog.csdn.net/softdzf/article/details/6624046
-
-# Original code was implemented with Python2 + PyQt4.
-# CSUN modified with Python3 + PyQt5 in Feb 2022
-
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtGui import QIntValidator, QValidator, QRegExpValidator
+from PyQt5.QtCore import Qt, QMargins, QRegExp
+from PyQt5.QtWidgets import QLineEdit, QLabel, QWidget, QHBoxLayout
 
 
-class IpPartEdit(QLineEdit):
+class IpByteEdit(QLineEdit):
     def __init__(self, parent=None):
         QLineEdit.__init__(self, parent)
 
@@ -31,16 +23,15 @@ class IpPartEdit(QLineEdit):
 
     def focusInEvent(self, event):
         self.selectAll()
-        super(IpPartEdit, self).focusInEvent(event)
+        super(IpByteEdit, self).focusInEvent(event)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Period:
             if self.nextTab:
                 self.nextTab.setFocus()
                 self.nextTab.selectAll()
-        super(IpPartEdit, self).keyPressEvent(event)
+        super(IpByteEdit, self).keyPressEvent(event)
 
-    # @pyqtSlot(str)
     def text_edited(self, text: str):
         validator = QIntValidator(0, 255, self)
         ipaddr = text
@@ -67,14 +58,14 @@ class Ip4Edit(QLineEdit):
         QLineEdit.__init__(self, parent)
         self.setFocusPolicy(Qt.NoFocus)
 
-        self.ip_part1 = IpPartEdit()
-        self.ip_part2 = IpPartEdit()
-        self.ip_part3 = IpPartEdit()
-        self.ip_part4 = IpPartEdit()
-        self.ip_part1.setAlignment(Qt.AlignRight)
-        self.ip_part2.setAlignment(Qt.AlignRight)
-        self.ip_part3.setAlignment(Qt.AlignRight)
-        self.ip_part4.setAlignment(Qt.AlignRight)
+        self.ip_byte1 = IpByteEdit()
+        self.ip_byte2 = IpByteEdit()
+        self.ip_byte3 = IpByteEdit()
+        self.ip_byte4 = IpByteEdit()
+        self.ip_byte1.setAlignment(Qt.AlignRight)
+        self.ip_byte2.setAlignment(Qt.AlignRight)
+        self.ip_byte3.setAlignment(Qt.AlignRight)
+        self.ip_byte4.setAlignment(Qt.AlignRight)
 
         self.labeldot1 = QLabel('.')
         self.labeldot2 = QLabel('.')
@@ -84,50 +75,48 @@ class Ip4Edit(QLineEdit):
         self.labeldot3.setAlignment(Qt.AlignCenter)
 
         layout = QHBoxLayout()
-        layout.addWidget(self.ip_part1, stretch=0, alignment=Qt.Alignment())
+        layout.addWidget(self.ip_byte1, stretch=0, alignment=Qt.Alignment())
         layout.addWidget(self.labeldot1, stretch=0, alignment=Qt.Alignment())
-        layout.addWidget(self.ip_part2, stretch=0, alignment=Qt.Alignment())
+        layout.addWidget(self.ip_byte2, stretch=0, alignment=Qt.Alignment())
         layout.addWidget(self.labeldot2, stretch=0, alignment=Qt.Alignment())
-        layout.addWidget(self.ip_part3, stretch=0, alignment=Qt.Alignment())
+        layout.addWidget(self.ip_byte3, stretch=0, alignment=Qt.Alignment())
         layout.addWidget(self.labeldot3, stretch=0, alignment=Qt.Alignment())
-        layout.addWidget(self.ip_part4, stretch=0, alignment=Qt.Alignment())
+        layout.addWidget(self.ip_byte4, stretch=0, alignment=Qt.Alignment())
         layout.setSpacing(0)
         layout.setContentsMargins(QMargins(2, 2, 2, 2))
 
         self.setLayout(layout)
 
-        QWidget.setTabOrder(self.ip_part1, self.ip_part2)
-        QWidget.setTabOrder(self.ip_part2, self.ip_part3)
-        QWidget.setTabOrder(self.ip_part3, self.ip_part4)
-        self.ip_part1.set_nextTabEdit(self.ip_part2)
-        self.ip_part2.set_nextTabEdit(self.ip_part3)
-        self.ip_part3.set_nextTabEdit(self.ip_part4)
+        QWidget.setTabOrder(self.ip_byte1, self.ip_byte2)
+        QWidget.setTabOrder(self.ip_byte2, self.ip_byte3)
+        QWidget.setTabOrder(self.ip_byte3, self.ip_byte4)
+        self.ip_byte1.set_nextTabEdit(self.ip_byte2)
+        self.ip_byte2.set_nextTabEdit(self.ip_byte3)
+        self.ip_byte3.set_nextTabEdit(self.ip_byte4)
 
-        self.ip_part1.textChanged.connect(self.textChangedSlot)
-        self.ip_part2.textChanged.connect(self.textChangedSlot)
-        self.ip_part3.textChanged.connect(self.textChangedSlot)
-        self.ip_part4.textChanged.connect(self.textChangedSlot)
-        self.ip_part1.textEdited.connect(self.textEditedSlot)
-        self.ip_part2.textEdited.connect(self.textEditedSlot)
-        self.ip_part3.textEdited.connect(self.textEditedSlot)
-        self.ip_part4.textEdited.connect(self.textEditedSlot)
+        self.ip_byte1.textChanged.connect(self.textChangedSlot)
+        self.ip_byte2.textChanged.connect(self.textChangedSlot)
+        self.ip_byte3.textChanged.connect(self.textChangedSlot)
+        self.ip_byte4.textChanged.connect(self.textChangedSlot)
+        self.ip_byte1.textEdited.connect(self.textEditedSlot)
+        self.ip_byte2.textEdited.connect(self.textEditedSlot)
+        self.ip_byte3.textEdited.connect(self.textEditedSlot)
+        self.ip_byte4.textEdited.connect(self.textEditedSlot)
 
-    # @pyqtSlot('QString')
     def textChangedSlot(self):
-        ippart1 = self.ip_part1.text()
-        ippart2 = self.ip_part2.text()
-        ippart3 = self.ip_part3.text()
-        ippart4 = self.ip_part4.text()
-        ipaddr = "{}.{}.{}.{}".format(ippart1, ippart2, ippart3, ippart4)
+        ipbyte1 = self.ip_byte1.text()
+        ipbyte2 = self.ip_byte2.text()
+        ipbyte3 = self.ip_byte3.text()
+        ipbyte4 = self.ip_byte4.text()
+        ipaddr = "{}.{}.{}.{}".format(ipbyte1, ipbyte2, ipbyte3, ipbyte4)
         self.textChanged.emit(ipaddr)
 
-    # @pyqtSlot('QString')
     def textEditedSlot(self):
-        ippart1 = self.ip_part1.text()
-        ippart2 = self.ip_part2.text()
-        ippart3 = self.ip_part3.text()
-        ippart4 = self.ip_part4.text()
-        ipaddr = "{}.{}.{}.{}".format(ippart1, ippart2, ippart3, ippart4)
+        ipbyte1 = self.ip_byte1.text()
+        ipbyte2 = self.ip_byte2.text()
+        ipbyte3 = self.ip_byte3.text()
+        ipbyte4 = self.ip_byte4.text()
+        ipaddr = "{}.{}.{}.{}".format(ipbyte1, ipbyte2, ipbyte3, ipbyte4)
         self.textEdited.emit(ipaddr)
 
     def setText(self, text):
@@ -135,43 +124,43 @@ class Ip4Edit(QLineEdit):
         validator = QRegExpValidator(regexp, self)
         npos = 0
         state = validator.validate(text, npos)[0]
-        ippart1 = ""
-        ippart2 = ""
-        ippart3 = ""
-        ippart4 = ""
+        ipbyte1 = ""
+        ipbyte2 = ""
+        ipbyte3 = ""
+        ipbyte4 = ""
 
         if state == QValidator.Acceptable:  # valid
-            ippartlist = text.split('.')
+            ipbytelist = text.split('.')
 
-            strcount = len(ippartlist)
+            strcount = len(ipbytelist)
             index = 0
             if index < strcount:
-                ippart1 = ippartlist[index]
+                ipbyte1 = ipbytelist[index]
             index += 1
             if index < strcount:
-                ippart2 = ippartlist[index]
+                ipbyte2 = ipbytelist[index]
                 index += 1
             if index < strcount:
-                ippart3 = ippartlist[index]
+                ipbyte3 = ipbytelist[index]
                 index += 1
             if index < strcount:
-                ippart4 = ippartlist[index]
+                ipbyte4 = ipbytelist[index]
 
-        self.ip_part1.setText(ippart1)
-        self.ip_part2.setText(ippart2)
-        self.ip_part3.setText(ippart3)
-        self.ip_part4.setText(ippart4)
+        self.ip_byte1.setText(ipbyte1)
+        self.ip_byte2.setText(ipbyte2)
+        self.ip_byte3.setText(ipbyte3)
+        self.ip_byte4.setText(ipbyte4)
 
     def text(self):
-        ippart1 = self.ip_part1.text()
-        ippart2 = self.ip_part2.text()
-        ippart3 = self.ip_part3.text()
-        ippart4 = self.ip_part4.text()
+        ipbyte1 = self.ip_byte1.text()
+        ipbyte2 = self.ip_byte2.text()
+        ipbyte3 = self.ip_byte3.text()
+        ipbyte4 = self.ip_byte4.text()
 
-        return "{}.{}.{}.{}".format(ippart1, ippart2, ippart3, ippart4)
+        return "{}.{}.{}.{}".format(ipbyte1, ipbyte2, ipbyte3, ipbyte4)
 
     def setStyleSheet(self, styleSheet):
-        self.ip_part1.setStyleSheet(styleSheet)
-        self.ip_part2.setStyleSheet(styleSheet)
-        self.ip_part3.setStyleSheet(styleSheet)
-        self.ip_part4.setStyleSheet(styleSheet)
+        self.ip_byte1.setStyleSheet(styleSheet)
+        self.ip_byte2.setStyleSheet(styleSheet)
+        self.ip_byte3.setStyleSheet(styleSheet)
+        self.ip_byte4.setStyleSheet(styleSheet)

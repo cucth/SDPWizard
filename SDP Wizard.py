@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, \
     QWidget, QFileDialog, QMessageBox, QAction, QDialog
+# from PyQt5.QtGui import QIntValidator, QRegExpValidator
 from PyQt5 import QtCore
 import SDPW_MainWindow
 import Dialog_About
@@ -11,7 +12,7 @@ import IP4Edit
 
 DEFINE_NBSP = " "
 DEFINE_MY_NAME = "SDP Wizard (for Spectrum)"
-DEFINE_MY_VERSION = "0.1-alpha"
+DEFINE_MY_VERSION = "0.3-beta"
 DEFINE_MY_AUTHOR = "Charles Sun @Harmonic Inc. (2022)"
 
 DEFINE_SDPTYPE_PROTO_VER: str = "v="
@@ -299,15 +300,24 @@ def configSDP() -> bool:
     str_media_fmtp_audio = ["", "", "", ""]
 
     def verify_mcast_addr(str_mcast_addr_to_verify: str, alarm_focus: QWidget):
+        # default multicast address:
+        """
+        239.210.120.011
+        ┆┆┆ ┆┆┆ ┆┆└┈stream ID in channel: 1:first 2: second(in 2022-7 group)
+        ┆┆┆ ┆┆┆ └┴┈┈channel ID
+        ┆┆┆ ┆└┴┈┈┈┈┈stream type: 20:video(ST 2110-20), 30:audio, 40:ANC
+        ┆┆┆ └┈┈┈┈┈┈┈channel role: 1: Main, 2: Backup
+        └┴┴┈┈┈┈┈┈┈┈┈protocol: 210:ST2110, 217:ST2110 with 2022-7
+        """
         list_str_mcast_addr_to_verify = str_mcast_addr_to_verify.split(".")
         for j in list_str_mcast_addr_to_verify[:]:
             if j == "":
-                display_alarm(alarm_focus.ip_part1, "Please complete input")
+                display_alarm(alarm_focus.ip_byte1, "Please complete mc input")
                 return False
         if 223 < int(list_str_mcast_addr_to_verify[0]) < 240:
             if int(list_str_mcast_addr_to_verify[0]) == 224:
                 if 0 < int(list_str_mcast_addr_to_verify[1]) < 5:
-                    display_alarm(alarm_focus.ip_part2,
+                    display_alarm(alarm_focus.ip_byte2,
                                   "The destination multicast address is allocate by IANA. \n \
                                   Allocation by IANA / IETF RFC-5771: \n \
                                   Address Range                 Size       Designation \n \
@@ -323,14 +333,14 @@ def configSDP() -> bool:
                                   )
                     return False
             elif int(list_str_mcast_addr_to_verify[0]) == 232:
-                display_alarm(alarm_focus.ip_part1,
+                display_alarm(alarm_focus.ip_byte1,
                               "The destination multicast address 232.x.x.x is allocate by IANA \n \
                               for Source-Specific Multicast(SSM). \n \
                               Please don't use 232/8 unless SSM is configured."
                               )
                 return True
             elif int(list_str_mcast_addr_to_verify[0]) == 233:
-                display_alarm(alarm_focus.ip_part1,
+                display_alarm(alarm_focus.ip_byte1,
                               "The destination multicast address is allocate by IANA. \n \
                               Allocation by IANA / IETF RFC-5771: \n \
                               Address Range                 Size       Designation \n \
@@ -342,7 +352,7 @@ def configSDP() -> bool:
                               )
                 return True
         else:
-            display_alarm(alarm_focus.ip_part1,
+            display_alarm(alarm_focus.ip_byte1,
                           "Please enter a valid Multicast IP Address."
                           )
             return False
@@ -357,6 +367,7 @@ def configSDP() -> bool:
                                   It's recommended to set multicast desination port between 1025 - 65535"
                                   )
                     return True
+                return True
             else:
                 display_alarm(alarm_focus, "Multicast desination port invalid!")
                 return False
@@ -725,18 +736,18 @@ def configSDP() -> bool:
     ipaddrlist_origin = str_origin_unicast_ipaddr.split(".")
     for i in ipaddrlist_origin[:]:
         if i == "":
-            display_alarm(MainWindow.ui.ip4Edit_origin_IpAddr.ip_part1, "Please complete input")
+            display_alarm(MainWindow.ui.ip4Edit_origin_IpAddr.ip_byte1, "Please complete input")
             return False
     if int(ipaddrlist_origin[0]) >= 224:
-        display_alarm(MainWindow.ui.ip4Edit_origin_IpAddr.ip_part1,
+        display_alarm(MainWindow.ui.ip4Edit_origin_IpAddr.ip_byte1,
                       "IP should be unicast address. Multicast or reserved address cannot be used!")
         return False
     if int(ipaddrlist_origin[0]) == 127:
-        display_alarm(MainWindow.ui.ip4Edit_origin_IpAddr.ip_part1,
+        display_alarm(MainWindow.ui.ip4Edit_origin_IpAddr.ip_byte1,
                       "127.x.x.x is local loopback address. Please use valid unicast address!")
         return False
     if int(ipaddrlist_origin[0]) == 169 and int(ipaddrlist_origin[1]) == 254:
-        display_alarm(MainWindow.ui.ip4Edit_origin_IpAddr.ip_part1,
+        display_alarm(MainWindow.ui.ip4Edit_origin_IpAddr.ip_byte1,
                       "169.254.x.x is automatic private address. Please use valid unicast address!")
         return False
 
@@ -754,25 +765,27 @@ def configSDP() -> bool:
             MainWindow.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr):
         return False
     if not verify_mcast_addr(
-            str_media_video_dest_mcaddr_second,
-            MainWindow.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr):
-        return False
-    if not verify_mcast_addr(
             str_media_audio_dest_mcaddr_first,
             MainWindow.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr):
-        return False
-    if not verify_mcast_addr(
-            str_media_audio_dest_mcaddr_second,
-            MainWindow.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr):
         return False
     if not verify_mcast_addr(
             str_media_anc_dest_mcaddr_first,
             MainWindow.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr):
         return False
-    if not verify_mcast_addr(
-            str_media_anc_dest_mcaddr_second,
-            MainWindow.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr):
-        return False
+
+    if MainWindow.ui.checkBox_Media_DUP.isChecked():
+        if not verify_mcast_addr(
+                str_media_video_dest_mcaddr_second,
+                MainWindow.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr):
+            return False
+        if not verify_mcast_addr(
+                str_media_audio_dest_mcaddr_second,
+                MainWindow.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr):
+            return False
+        if not verify_mcast_addr(
+                str_media_anc_dest_mcaddr_second,
+                MainWindow.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr):
+            return False
 
     # F-4 verify destination multicast port
     if not verify_mcast_port(
@@ -780,25 +793,27 @@ def configSDP() -> bool:
             MainWindow.ui.lineEdit_Media_Video_First_Dest_Mcast_Port):
         return False
     if not verify_mcast_port(
-            str_media_video_dest_mcport_second,
-            MainWindow.ui.lineEdit_Media_Video_Second_Dest_Mcast_Port):
-        return False
-    if not verify_mcast_port(
             str_media_audio_dest_mcport_first,
             MainWindow.ui.lineEdit_Media_Audio_First_Dest_Mcast_Port):
-        return False
-    if not verify_mcast_port(
-            str_media_audio_dest_mcport_second,
-            MainWindow.ui.lineEdit_Media_Audio_Second_Dest_Mcast_Port):
         return False
     if not verify_mcast_port(
             str_media_anc_dest_mcport_first,
             MainWindow.ui.lineEdit_Media_ANC_First_Dest_Mcast_Port):
         return False
-    if not verify_mcast_port(
-            str_media_anc_dest_mcport_second,
-            MainWindow.ui.lineEdit_Media_ANC_Second_Dest_Mcast_Port):
-        return False
+
+    if MainWindow.ui.checkBox_Media_DUP.isChecked():
+        if not verify_mcast_port(
+                str_media_video_dest_mcport_second,
+                MainWindow.ui.lineEdit_Media_Video_Second_Dest_Mcast_Port):
+            return False
+        if not verify_mcast_port(
+                str_media_audio_dest_mcport_second,
+                MainWindow.ui.lineEdit_Media_Audio_Second_Dest_Mcast_Port):
+            return False
+        if not verify_mcast_port(
+                str_media_anc_dest_mcport_second,
+                MainWindow.ui.lineEdit_Media_ANC_Second_Dest_Mcast_Port):
+            return False
 
     # Audio Packet Time
     str_ptime = \
@@ -1077,35 +1092,45 @@ class Main(QMainWindow):
         self.about_menu = self.menubar.addMenu("About")
         self.about_menu.addAction(self.about_action)
 
-        self.ui.ip4Edit_origin_IpAddr = IP4Edit.Ip4Edit(self.ui.centralwidget)
-        self.ui.ip4Edit_origin_IpAddr.setGeometry(QtCore.QRect(260, 130, 121, 21))
-        self.ui.ip4Edit_origin_IpAddr.setAlignment(QtCore.Qt.AlignCenter)
+        self.ui.ip4Edit_origin_IpAddr = IP4Edit.Ip4Edit(self.ui.horizontalLayoutWidget)
+        self.ui.verticalLayout_28.addWidget(self.ui.ip4Edit_origin_IpAddr)
 
         self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_Video)
         self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(10, 50, 121, 21))
         self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+        self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.ip_byte1.setText("239")
 
         self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_Video)
         self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(10, 100, 121, 21))
         self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+        self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.ip_byte1.setText("239")
 
         self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_Audio)
         self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(10, 50, 121, 21))
         self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+        self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.ip_byte1.setText("239")
 
         self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_Audio)
         self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(10, 100, 121, 21))
         self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+        self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.ip_byte1.setText("239")
 
         self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_ANC)
         self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(10, 40, 121, 21))
         self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+        self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.ip_byte1.setText("239")
 
         self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_ANC)
         self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(230, 40, 121, 21))
         self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+        self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.ip_byte1.setText("239")
 
-        def checkBox_Media_DUP_Clicked():
+        """        validator_int_ttl = QIntValidator(0, 255, self)
+        self.ui.lineEdit_Media_Conn_TTL.setValidator(validator_int_ttl)
+        self.setLayout(self.ui.horizontalLayout_TTL)"""
+
+        # slot for some widgets
+        def slot_checkBox_Media_DUP_Clicked():
             if self.ui.checkBox_Media_DUP.isChecked():
                 self.ui.label_Media_Video_First_Dest.setText("First Destination:")
                 self.ui.label_Media_Video_Second_Dest.show()
@@ -1122,6 +1147,12 @@ class Main(QMainWindow):
                 self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.show()
                 self.ui.label_Media_ANC_Second_Colon.show()
                 self.ui.lineEdit_Media_ANC_Second_Dest_Mcast_Port.show()
+                self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.ip_byte2.setText("217")
+                self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.ip_byte2.setText("217")
+                self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.ip_byte2.setText("217")
+                self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.ip_byte2.setText("217")
+                self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.ip_byte2.setText("217")
+                self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.ip_byte2.setText("217")
             else:
                 self.ui.label_Media_Video_First_Dest.setText("Destination:")
                 self.ui.label_Media_Video_Second_Dest.hide()
@@ -1138,8 +1169,14 @@ class Main(QMainWindow):
                 self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.hide()
                 self.ui.label_Media_ANC_Second_Colon.hide()
                 self.ui.lineEdit_Media_ANC_Second_Dest_Mcast_Port.hide()
+                self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.ip_byte2.setText("210")
+                self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.ip_byte2.setText("210")
+                self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.ip_byte2.setText("210")
+                self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.ip_byte2.setText("210")
+                self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.ip_byte2.setText("210")
+                self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.ip_byte2.setText("210")
 
-        def checkBox_Sess_Generate_ID_Clicked():
+        def slot_checkBox_Sess_Generate_ID_Clicked():
             global str_ntp_timestamp
             if self.ui.checkBox_Sess_Generate_ID.isChecked():
                 self.ui.lineEdit_Sess_ID.setDisabled(True)
@@ -1150,6 +1187,20 @@ class Main(QMainWindow):
             else:
                 self.ui.lineEdit_Sess_ID.setEnabled(True)
                 self.ui.lineEdit_Sess_Ver.setEnabled(True)
+
+        def slot_lineEdit_Channel_ID_Edited():
+            global str_channel_name
+            str_channel_name = self.ui.lineEdit_Channel_ID.text()
+            if str_channel_name.isdigit() and 0 < int(str_channel_name) < 26:
+                str_temp = str_channel_name
+            else:
+                str_temp = "1"
+            self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.ip_byte4.setText(str_temp + "1")
+            self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.ip_byte4.setText(str_temp + "2")
+            self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.ip_byte4.setText(str_temp + "1")
+            self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.ip_byte4.setText(str_temp + "2")
+            self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.ip_byte4.setText(str_temp + "1")
+            self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.ip_byte4.setText(str_temp + "2")
 
         # A-Radio Button GROUP - Declare Variables for buttons in a group
         # A-1-Dir Model:
@@ -1211,10 +1262,10 @@ class Main(QMainWindow):
         self.btngroup_tapchn = QButtonGroup()
 
         # B-0-Slot for buttons
-        def pushButton_GenSDP_Clicked():
+        def slot_pushButton_GenSDP_Clicked():
             configSDP()
 
-        def pushButton_SavetoFile_Clicked():
+        def slot_pushButton_SavetoFile_Clicked():
             savetoFile()
 
         # B-x-Radio Button GROUP - Slot for clicked
@@ -1299,9 +1350,22 @@ class Main(QMainWindow):
             if self.btngroup_chnrole.checkedId() == 0:
                 str_channel_role = "Main"
                 str_channel_role_short = "M"
+                self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.ip_byte3.setText("120")
+                self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.ip_byte3.setText("120")
+                self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.ip_byte3.setText("130")
+                self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.ip_byte3.setText("130")
+                self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.ip_byte3.setText("140")
+                self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.ip_byte3.setText("140")
+
             elif self.btngroup_chnrole.checkedId() == 1:
                 str_channel_role = "Backup"
                 str_channel_role_short = "B"
+                self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.ip_byte3.setText("220")
+                self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.ip_byte3.setText("220")
+                self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.ip_byte3.setText("230")
+                self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.ip_byte3.setText("230")
+                self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.ip_byte3.setText("240")
+                self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.ip_byte3.setText("240")
 
         # B-9-Tap Channel:
         def slot_radiobtn_clicked_tapchn():
@@ -1383,10 +1447,10 @@ class Main(QMainWindow):
             self.radiobtns_tapchn[i].clicked.connect(slot_radiobtn_clicked_tapchn)
 
         # C-10 single object
-        self.ui.pushButton_GenSDP.clicked.connect(pushButton_GenSDP_Clicked)
-        self.ui.pushButton_SavetoFile.clicked.connect(pushButton_SavetoFile_Clicked)
-        self.ui.checkBox_Sess_Generate_ID.clicked.connect(checkBox_Sess_Generate_ID_Clicked)
-        self.ui.checkBox_Media_DUP.clicked.connect(checkBox_Media_DUP_Clicked)
+        self.ui.pushButton_GenSDP.clicked.connect(slot_pushButton_GenSDP_Clicked)
+        self.ui.pushButton_SavetoFile.clicked.connect(slot_pushButton_SavetoFile_Clicked)
+        self.ui.checkBox_Sess_Generate_ID.clicked.connect(slot_checkBox_Sess_Generate_ID_Clicked)
+        self.ui.checkBox_Media_DUP.clicked.connect(slot_checkBox_Media_DUP_Clicked)
         self.ui.comboBox_Audio_Format_Ch1and2.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch1and2)
         self.ui.comboBox_Audio_Format_Ch3and4.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch3and4)
         self.ui.comboBox_Audio_Format_Ch5and6.currentIndexChanged.connect(slot_combobox_indexchanged_audfmt_ch5and6)
@@ -1399,10 +1463,11 @@ class Main(QMainWindow):
             slot_combobox_indexchanged_trackqty_ch5and6)
         self.ui.comboBox_Audio_Track_Qty_Ch7and8.currentIndexChanged.connect(
             slot_combobox_indexchanged_trackqty_ch7and8)
+        self.ui.lineEdit_Channel_ID.editingFinished.connect(slot_lineEdit_Channel_ID_Edited)
 
         # D-init value for each radio button group
-        checkBox_Sess_Generate_ID_Clicked()
-        checkBox_Media_DUP_Clicked()
+        slot_checkBox_Sess_Generate_ID_Clicked()
+        slot_checkBox_Media_DUP_Clicked()
         slot_radiobtn_clicked_dirmodel()
         slot_radiobtn_clicked_res()
         slot_radiobtn_clicked_tcs()
@@ -1412,6 +1477,7 @@ class Main(QMainWindow):
         slot_radiobtn_clicked_pm()
         slot_radiobtn_clicked_chnrole()
         slot_radiobtn_clicked_tapchn()
+        slot_lineEdit_Channel_ID_Edited()
 
 
 if __name__ == '__main__':
