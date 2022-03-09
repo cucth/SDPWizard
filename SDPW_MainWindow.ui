@@ -10,30 +10,6 @@
     <height>654</height>
    </rect>
   </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>1280</width>
-    <height>654</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>1280</width>
-    <height>1400</height>
-   </size>
-  </property>
-  <property name="baseSize">
-   <size>
-    <width>1280</width>
-    <height>654</height>
-   </size>
-  </property>
   <property name="windowTitle">
    <string notr="true">SDP Wizard</string>
   </property>
@@ -390,7 +366,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="5,5,3,8,11,28">
+          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="5,18,3,8,11,15">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -444,30 +420,24 @@
            <item>
             <layout class="QVBoxLayout" name="verticalLayout">
              <item>
-              <widget class="QLineEdit" name="lineEdit_Tap_ID">
-               <property name="font">
-                <font>
-                 <family>Arial</family>
-                 <pointsize>-1</pointsize>
-                </font>
+              <widget class="QComboBox" name="comboBox_Tap_ID">
+               <property name="toolTip">
+                <string>Enter or Select from drop-down list</string>
                </property>
-               <property name="acceptDrops">
-                <bool>false</bool>
+               <property name="toolTipDuration">
+                <number>10000</number>
                </property>
-               <property name="styleSheet">
-                <string notr="true">font-family: Arial; font-size: 13px</string>
+               <property name="editable">
+                <bool>true</bool>
                </property>
-               <property name="inputMask">
-                <string>00000</string>
+               <property name="currentText">
+                <string/>
                </property>
-               <property name="text">
-                <string>01234</string>
+               <property name="maxCount">
+                <number>128</number>
                </property>
-               <property name="maxLength">
-                <number>5</number>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
+               <property name="modelColumn">
+                <number>0</number>
                </property>
               </widget>
              </item>
@@ -1084,124 +1054,17 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="12,16,7">
+            <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="10,10,9,7">
              <property name="spacing">
               <number>9</number>
              </property>
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_45">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QGroupBox" name="groupBox_Media_Video_DirModel">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>80</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>83</height>
-                  </size>
-                 </property>
-                 <property name="baseSize">
-                  <size>
-                   <width>0</width>
-                   <height>80</height>
-                  </size>
-                 </property>
-                 <property name="autoFillBackground">
-                  <bool>false</bool>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">font-family: Arial; font-size: 13px</string>
-                 </property>
-                 <property name="title">
-                  <string>Dir. Model</string>
-                 </property>
-                 <widget class="QRadioButton" name="radioButton_Media_Video_DirModel_VSX">
-                  <property name="geometry">
-                   <rect>
-                    <x>10</x>
-                    <y>20</y>
-                    <width>71</width>
-                    <height>20</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QRadioButton::indicator {width: 15px; height: 15px} font-family: Arial; font-size: 13px
-</string>
-                  </property>
-                  <property name="text">
-                   <string>VSX</string>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                 <widget class="QRadioButton" name="radioButton_Media_Video_DirModel_MIP9k">
-                  <property name="geometry">
-                   <rect>
-                    <x>10</x>
-                    <y>40</y>
-                    <width>71</width>
-                    <height>20</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QRadioButton::indicator {width: 15px; height: 15px} font-family: Arial; font-size: 13px
-</string>
-                  </property>
-                  <property name="text">
-                   <string>MIP-9k</string>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                 <widget class="QRadioButton" name="radioButton_Media_Video_DirModel_NonSpectrum">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="geometry">
-                   <rect>
-                    <x>10</x>
-                    <y>60</y>
-                    <width>111</width>
-                    <height>20</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QRadioButton::indicator {width: 15px; height: 15px} font-family: Arial; font-size: 13px
-</string>
-                  </property>
-                  <property name="text">
-                   <string>Non-Spectrum</string>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </widget>
-               </item>
-              </layout>
-             </item>
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_44">
                <property name="spacing">
                 <number>0</number>
                </property>
                <item>
-                <widget class="QGroupBox" name="groupBox_Media_Video_Res">
+                <widget class="QGroupBox" name="groupBox_Media_Video_Resolution">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -1227,14 +1090,14 @@
                   <string notr="true">font-family: Arial; font-size: 13px</string>
                  </property>
                  <property name="title">
-                  <string>Resolution Framerate</string>
+                  <string>Resolution</string>
                  </property>
-                 <widget class="QRadioButton" name="radioButton_Media_Video_Res_HD1080i25">
+                 <widget class="QRadioButton" name="radioButton_Media_Video_Res_1080">
                   <property name="geometry">
                    <rect>
-                    <x>10</x>
+                    <x>5</x>
                     <y>20</y>
-                    <width>141</width>
+                    <width>88</width>
                     <height>20</height>
                    </rect>
                   </property>
@@ -1249,7 +1112,7 @@
 </string>
                   </property>
                   <property name="text">
-                   <string>HD: 1920x1080i25</string>
+                   <string>1920x1080</string>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -1261,12 +1124,12 @@
                    <bool>true</bool>
                   </property>
                  </widget>
-                 <widget class="QRadioButton" name="radioButton_Media_Video_Res_UHD2160p50">
+                 <widget class="QRadioButton" name="radioButton_Media_Video_Res_720">
                   <property name="geometry">
                    <rect>
-                    <x>10</x>
+                    <x>5</x>
                     <y>60</y>
-                    <width>151</width>
+                    <width>81</width>
                     <height>20</height>
                    </rect>
                   </property>
@@ -1281,18 +1144,18 @@
 </string>
                   </property>
                   <property name="text">
-                   <string>UHD: 3840x2160p50</string>
+                   <string>1280x720</string>
                   </property>
                   <property name="checked">
                    <bool>false</bool>
                   </property>
                  </widget>
-                 <widget class="QRadioButton" name="radioButton_Media_Video_Res_HD1080p50">
+                 <widget class="QRadioButton" name="radioButton_Media_Video_Res_2160">
                   <property name="geometry">
                    <rect>
-                    <x>10</x>
+                    <x>5</x>
                     <y>40</y>
-                    <width>151</width>
+                    <width>87</width>
                     <height>20</height>
                    </rect>
                   </property>
@@ -1307,7 +1170,190 @@
 </string>
                   </property>
                   <property name="text">
-                   <string>HD: 1920x1080p50</string>
+                   <string>3840x2160</string>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_55">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QGroupBox" name="groupBox_Media_Video_ScanMode">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>83</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>83</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>0</width>
+                   <height>83</height>
+                  </size>
+                 </property>
+                 <property name="autoFillBackground">
+                  <bool>false</bool>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">font-family: Arial; font-size: 13px</string>
+                 </property>
+                 <property name="title">
+                  <string>Scan Mode</string>
+                 </property>
+                 <widget class="QRadioButton" name="radioButton_Media_Video_ScanMode_Interlaced">
+                  <property name="geometry">
+                   <rect>
+                    <x>5</x>
+                    <y>20</y>
+                    <width>82</width>
+                    <height>20</height>
+                   </rect>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Arial</family>
+                    <pointsize>-1</pointsize>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QRadioButton::indicator {width: 15px; height: 15px} font-family: Arial; font-size: 13px
+</string>
+                  </property>
+                  <property name="text">
+                   <string>Interlaced</string>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>16</width>
+                    <height>16</height>
+                   </size>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                 <widget class="QRadioButton" name="radioButton_Media_Video_ScanMode_Progressive">
+                  <property name="geometry">
+                   <rect>
+                    <x>5</x>
+                    <y>40</y>
+                    <width>90</width>
+                    <height>20</height>
+                   </rect>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Arial</family>
+                    <pointsize>-1</pointsize>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QRadioButton::indicator {width: 15px; height: 15px} font-family: Arial; font-size: 13px
+</string>
+                  </property>
+                  <property name="text">
+                   <string>Progressive</string>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_56">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QGroupBox" name="groupBox_Media_Video_FrameRate">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>83</height>
+                  </size>
+                 </property>
+                 <property name="autoFillBackground">
+                  <bool>false</bool>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">font-family: Arial; font-size: 13px</string>
+                 </property>
+                 <property name="title">
+                  <string>Frame Rate</string>
+                 </property>
+                 <widget class="QRadioButton" name="radioButton_Media_Video_FrameRate_Upper">
+                  <property name="geometry">
+                   <rect>
+                    <x>5</x>
+                    <y>20</y>
+                    <width>71</width>
+                    <height>20</height>
+                   </rect>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Arial</family>
+                    <pointsize>-1</pointsize>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QRadioButton::indicator {width: 15px; height: 15px} font-family: Arial; font-size: 13px
+</string>
+                  </property>
+                  <property name="text">
+                   <string>25</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                 <widget class="QRadioButton" name="radioButton_Media_Video_FrameRate_Lower">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="geometry">
+                   <rect>
+                    <x>5</x>
+                    <y>40</y>
+                    <width>71</width>
+                    <height>20</height>
+                   </rect>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Arial</family>
+                    <pointsize>-1</pointsize>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QRadioButton::indicator {width: 15px; height: 15px} font-family: Arial; font-size: 13px
+</string>
+                  </property>
+                  <property name="text">
+                   <string>29.97</string>
                   </property>
                   <property name="checked">
                    <bool>false</bool>
@@ -1354,7 +1400,7 @@
                  <widget class="QRadioButton" name="radioButton_Media_Video_TCS_SDR">
                   <property name="geometry">
                    <rect>
-                    <x>10</x>
+                    <x>5</x>
                     <y>20</y>
                     <width>51</width>
                     <height>20</height>
@@ -1380,7 +1426,7 @@
                  <widget class="QRadioButton" name="radioButton_Media_Video_TCS_PQ">
                   <property name="geometry">
                    <rect>
-                    <x>10</x>
+                    <x>5</x>
                     <y>60</y>
                     <width>61</width>
                     <height>20</height>
@@ -1406,7 +1452,7 @@
                  <widget class="QRadioButton" name="radioButton_Media_Video_TCS_HLG">
                   <property name="geometry">
                    <rect>
-                    <x>10</x>
+                    <x>5</x>
                     <y>40</y>
                     <width>61</width>
                     <height>20</height>
@@ -1436,7 +1482,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_19" stretch="11,7,9,7">
+            <layout class="QHBoxLayout" name="horizontalLayout_19" stretch="11,7,9,0">
              <property name="spacing">
               <number>9</number>
              </property>
@@ -1483,7 +1529,7 @@
                  <widget class="QRadioButton" name="radioButton_Media_Video_Sampling_422">
                   <property name="geometry">
                    <rect>
-                    <x>10</x>
+                    <x>5</x>
                     <y>20</y>
                     <width>100</width>
                     <height>20</height>
@@ -1509,7 +1555,7 @@
                  <widget class="QRadioButton" name="radioButton_Media_Video_Sampling_420">
                   <property name="geometry">
                    <rect>
-                    <x>10</x>
+                    <x>5</x>
                     <y>40</y>
                     <width>100</width>
                     <height>20</height>
@@ -1579,7 +1625,7 @@
                  <widget class="QRadioButton" name="radioButton_Media_Video_Depth_8bit">
                   <property name="geometry">
                    <rect>
-                    <x>10</x>
+                    <x>5</x>
                     <y>20</y>
                     <width>51</width>
                     <height>20</height>
@@ -1608,7 +1654,7 @@
                  <widget class="QRadioButton" name="radioButton_Media_Video_Depth_10bit">
                   <property name="geometry">
                    <rect>
-                    <x>10</x>
+                    <x>5</x>
                     <y>40</y>
                     <width>55</width>
                     <height>20</height>
@@ -1696,7 +1742,7 @@
                  <widget class="QRadioButton" name="radioButton_Media_Video_Colorimetry_BT709">
                   <property name="geometry">
                    <rect>
-                    <x>10</x>
+                    <x>5</x>
                     <y>20</y>
                     <width>71</width>
                     <height>20</height>
@@ -1722,7 +1768,7 @@
                  <widget class="QRadioButton" name="radioButton_Media_Video_Colorimetry_BT2020">
                   <property name="geometry">
                    <rect>
-                    <x>10</x>
+                    <x>5</x>
                     <y>40</y>
                     <width>81</width>
                     <height>20</height>
@@ -1750,33 +1796,15 @@
               </layout>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_53">
+              <layout class="QVBoxLayout" name="verticalLayout_45">
                <property name="spacing">
                 <number>0</number>
                </property>
                <item>
-                <widget class="QGroupBox" name="groupBox_Media_Video_PM">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>62</height>
-                  </size>
-                 </property>
+                <widget class="QGroupBox" name="groupBox_Media_Video_DirModel">
                  <property name="maximumSize">
                   <size>
-                   <width>70</width>
-                   <height>62</height>
-                  </size>
-                 </property>
-                 <property name="baseSize">
-                  <size>
-                   <width>70</width>
+                   <width>16777215</width>
                    <height>62</height>
                   </size>
                  </property>
@@ -1787,58 +1815,43 @@
                   <string notr="true">font-family: Arial; font-size: 13px</string>
                  </property>
                  <property name="title">
-                  <string>PM</string>
+                  <string>Dir. Model</string>
                  </property>
-                 <widget class="QRadioButton" name="radioButton_Media_Video_PM_GPM">
+                 <widget class="QRadioButton" name="radioButton_Media_Video_DirModel_VSX">
                   <property name="geometry">
                    <rect>
-                    <x>10</x>
+                    <x>5</x>
                     <y>20</y>
                     <width>71</width>
                     <height>20</height>
                    </rect>
                   </property>
-                  <property name="font">
-                   <font>
-                    <family>Arial</family>
-                    <pointsize>-1</pointsize>
-                   </font>
-                  </property>
                   <property name="styleSheet">
                    <string notr="true">QRadioButton::indicator {width: 15px; height: 15px} font-family: Arial; font-size: 13px
 </string>
                   </property>
                   <property name="text">
-                   <string>GPM</string>
+                   <string>VSX</string>
                   </property>
                   <property name="checked">
                    <bool>true</bool>
                   </property>
                  </widget>
-                 <widget class="QRadioButton" name="radioButton_Media_Video_PM_BPM">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
+                 <widget class="QRadioButton" name="radioButton_Media_Video_DirModel_MIP9k">
                   <property name="geometry">
                    <rect>
-                    <x>10</x>
+                    <x>5</x>
                     <y>40</y>
                     <width>71</width>
                     <height>20</height>
                    </rect>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>Arial</family>
-                    <pointsize>-1</pointsize>
-                   </font>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">QRadioButton::indicator {width: 15px; height: 15px} font-family: Arial; font-size: 13px
 </string>
                   </property>
                   <property name="text">
-                   <string>BPM</string>
+                   <string>MIP-9k</string>
                   </property>
                   <property name="checked">
                    <bool>false</bool>
@@ -2287,6 +2300,9 @@
                 <widget class="QComboBox" name="comboBox_Audio_Format_Ch1and2">
                  <property name="styleSheet">
                   <string notr="true">font-family: Arial; font-size: 13px</string>
+                 </property>
+                 <property name="editable">
+                  <bool>false</bool>
                  </property>
                  <property name="currentIndex">
                   <number>1</number>
@@ -3018,10 +3034,20 @@
           </layout>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_8">
+          <layout class="QVBoxLayout" name="verticalLayout_8" stretch="1,1,1">
            <property name="spacing">
-            <number>0</number>
+            <number>5</number>
            </property>
+           <item>
+            <widget class="QPushButton" name="pushButton_ParseOMDB">
+             <property name="styleSheet">
+              <string notr="true">font-family: Arial; font-size: 13px</string>
+             </property>
+             <property name="text">
+              <string>Select OMDB</string>
+             </property>
+            </widget>
+           </item>
            <item>
             <widget class="QPushButton" name="pushButton_GenSDP">
              <property name="styleSheet">

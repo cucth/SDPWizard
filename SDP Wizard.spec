@@ -4,7 +4,7 @@
 block_cipher = None
 
 
-a = Analysis(['main.py'],
+a = Analysis(['SDP Wizard.py'],
              pathex=[],
              binaries=[],
              datas=[],
@@ -37,8 +37,8 @@ exe = EXE(pyz,
           disable_windowed_traceback=False,
           target_arch=None,
           codesign_identity=None,
-          entitlements_file=None , icon='SDPW.icns')
+          entitlements_file=None , icon='resource/SDPW.icns')
 app = BUNDLE(exe,
              name='SDP Wizard.app',
-             icon='SDPW.icns',
+             icon='resource/SDPW.icns',
              bundle_identifier=None)

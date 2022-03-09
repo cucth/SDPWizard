@@ -6,14 +6,15 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, \
     QWidget, QFileDialog, QMessageBox, QAction, QDialog
 # from PyQt5.QtGui import QIntValidator, QRegExpValidator
 from PyQt5 import QtCore
+from lxml import etree
 import SDPW_MainWindow
 import Dialog_About
 import IP4Edit
 
 DEFINE_NBSP = " "
 DEFINE_MY_NAME = "SDP Wizard (for Spectrum)"
-DEFINE_MY_VERSION = "0.3-beta"
-DEFINE_MY_AUTHOR = "Charles Sun @Harmonic Inc. (2022)"
+DEFINE_MY_VERSION = "0.4-beta"
+DEFINE_MY_AUTHOR = "CharlesSun@HarmonicInc(2022)"
 
 DEFINE_SDPTYPE_PROTO_VER: str = "v="
 DEFINE_SDPTYPE_ORIGIN: str = "o="
@@ -180,6 +181,47 @@ comboboxes_audio_format: list[QWidget] = []
 comboboxes_audio_trackqty: list[QWidget] = []
 comboboxes_audio_sample_size: list[QWidget] = []
 file: _io.TextIOWrapper
+list_str_tap: list[str] = []
+list_str_tapfamily: list[str] = []
+
+
+def display_alarm(set_focus_QWidget=None, str_alarm=""):
+    MainWindow.ui.tabWidget_SDPPreview.setCurrentIndex(0)
+    MainWindow.ui.listWidget_SDPPreview_Video.clear()
+    MainWindow.ui.listWidget_SDPPreview_Video.setStyleSheet(
+        "color: red; font-style: bold; font-size: 20px")
+    MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_alarm)
+    if set_focus_QWidget is not None:
+        set_focus_QWidget.setFocus()
+    return
+
+
+def parseOMDB() -> bool:
+    global list_str_tap
+    global list_str_tapfamily
+    _parser = etree.XMLParser(encoding="utf-8", recover=False)
+
+    try:
+        etree_omdb = etree.parse(os.getcwd() + "/manager.oda", parser=_parser)
+    except OSError:
+        display_alarm(None, "Open OMDB file failed. Please try again, or enter Tap ID manually.")
+        return False
+
+    _list_node_tapsn = etree_omdb.xpath("/OmneonDatabase/Object[m_objectType/Uint32=65]/m_serialNum/String")
+    _list_node_platformsn = etree_omdb.xpath("/OmneonDatabase/Object[m_objectType/Uint32=65]/m_strPlatformSN/String")
+    _list_node_mipfamily = etree_omdb.xpath("/OmneonDatabase/Object[m_objectType/Uint32=65]/m_mediaPortFamily/String")
+    MainWindow.ui.comboBox_Tap_ID.clear()
+
+    if len(_list_node_tapsn) > 0:
+        for i in range(len(_list_node_tapsn)):
+            list_str_tap.append(_list_node_tapsn[i].text[1:-2] + " on " + _list_node_platformsn[i].text[1:-2])
+            list_str_tapfamily.append(_list_node_mipfamily[i].text[1:-2])
+            MainWindow.ui.comboBox_Tap_ID.addItem(list_str_tap[i])
+        return True
+    else:
+        display_alarm(None, "OMDB parsing failed. Please try again, or enter Tap ID manually.")
+        return False
+    pass
 
 
 def configSDP() -> bool:
@@ -277,7 +319,7 @@ def configSDP() -> bool:
     str_sess_ver = MainWindow.ui.lineEdit_Sess_Ver.text()
     str_origin_unicast_ipaddr = MainWindow.ui.ip4Edit_origin_IpAddr.text()
     str_channel_name = MainWindow.ui.lineEdit_Channel_ID.text()
-    str_tap_id = MainWindow.ui.lineEdit_Tap_ID.text()
+    str_tap_id = MainWindow.ui.comboBox_Tap_ID.currentText()
     comboboxes_audio_format = [
         MainWindow.ui.comboBox_Audio_Format_Ch1and2,
         MainWindow.ui.comboBox_Audio_Format_Ch3and4,
@@ -388,15 +430,18 @@ def configSDP() -> bool:
     str_sess_name_video = \
         DEFINE_SDPTYPE_SESS_NAME + "Video SDP file for Channel-" + \
         str_channel_name + "-" + str_channel_role + \
-        ", output on Tap#" + str_tap_id + "-" + str_tap_channel
+        ", output from Tap_" + str_tap_id[0:5] + "-" + \
+        str_tap_channel + str_tap_id[5:]
     str_sess_name_audio = \
         DEFINE_SDPTYPE_SESS_NAME + "Audio SDP file for Channel-" + \
         str_channel_name + "-" + str_channel_role + \
-        ", output on Tap#" + str_tap_id + "-" + str_tap_channel
+        ", output from Tap_" + str_tap_id[0:5] + "-" + \
+        str_tap_channel + str_tap_id[5:]
     str_sess_name_anc = \
         DEFINE_SDPTYPE_SESS_NAME + "Ancillary Data SDP file for Channel-" + \
         str_channel_name + "-" + str_channel_role + \
-        ", output on Tap#" + str_tap_id + "-" + str_tap_channel
+        ", output from Tap_" + str_tap_id[0:5] + "-" + \
+        str_tap_channel + str_tap_id[5:]
     # SDP file Name - Video, Audio, ANC
     str_filename_sdp_video = \
         "OUT_Tap" + str_tap_id + str_tap_channel + \
@@ -513,6 +558,7 @@ def configSDP() -> bool:
         DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_RTPMAP + \
         DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_VIDEO + DEFINE_NBSP + \
         DEFINE_SDPVALUE_MEDIA_SUBTYPE_VIDEO + DEFINE_SDPVALUE_MEDIA_CLOCKRATE_VIDEO
+    str_media_video_fmtp_value_pm = "2110GPM"
     str_media_fmtp_video = \
         DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_FMTP + \
         DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_VIDEO + DEFINE_NBSP + \
@@ -666,7 +712,7 @@ def configSDP() -> bool:
     str_media_desc_anc_first = \
         DEFINE_SDPTYPE_MEDIA + DEFINE_SDPVALUE_MEDIA_TYPE_ANC + DEFINE_NBSP + \
         str_media_anc_dest_mcport_first + DEFINE_NBSP + \
-        DEFINE_SDPVALUE_MEDIA_PROTOCOL_ANC + DEFINE_NBSP +\
+        DEFINE_SDPVALUE_MEDIA_PROTOCOL_ANC + DEFINE_NBSP + \
         DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_ANC
 
     str_media_anc_dest_mcaddr_first = MainWindow.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.text()
@@ -724,14 +770,6 @@ def configSDP() -> bool:
         DEFINE_SDPVALUE_MEDIACLK_DIRECT_REF + DEFINE_SDPVALUE_MEDIACLK_OFFSET
 
     # F-validate input values
-    def display_alarm(set_focus_QWidget, str_alarm):
-        MainWindow.ui.tabWidget_SDPPreview.setCurrentIndex(0)
-        MainWindow.ui.listWidget_SDPPreview_Video.clear()
-        MainWindow.ui.listWidget_SDPPreview_Video.setStyleSheet(
-            "color: red; font-style: bold; font-size: 20px")
-        MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_alarm)
-        set_focus_QWidget.setFocus()
-
     # F-1 verify origin unicast IP
     ipaddrlist_origin = str_origin_unicast_ipaddr.split(".")
     for i in ipaddrlist_origin[:]:
@@ -1044,10 +1082,10 @@ def refresh_audio_combobox():
             if comboboxes_audio_trackqty[i].count() != 0:
                 track_qty_selected_in_current_line = comboboxes_audio_trackqty[i].currentText()
                 comboboxes_audio_trackqty[i].clear()
-            for k in range(2, 10-int_audio_track_qty_already_used, 2):
+            for k in range(2, 10 - int_audio_track_qty_already_used, 2):
                 comboboxes_audio_trackqty[i].addItem(str(k))
                 if str(k) == track_qty_selected_in_current_line:
-                    comboboxes_audio_trackqty[i].setCurrentIndex(comboboxes_audio_trackqty[i].count()-1)
+                    comboboxes_audio_trackqty[i].setCurrentIndex(comboboxes_audio_trackqty[i].count() - 1)
             comboboxes_audio_trackqty[i].setEnabled(True)
             if comboboxes_audio_trackqty[i].count() != 0:
                 comboboxes_audio_sample_size[i].setEnabled(True)
@@ -1062,7 +1100,7 @@ def refresh_audio_combobox():
                 comboboxes_audio_sample_size[i].setDisabled(True)
 
         if int_audio_track_qty_already_used < 8 and i < 3:
-            comboboxes_audio_format[i+1].setEnabled(True)
+            comboboxes_audio_format[i + 1].setEnabled(True)
         if comboboxes_audio_trackqty[i].currentText() != "":
             int_audio_track_qty_already_used += int(comboboxes_audio_trackqty[i].currentText())
 
@@ -1206,55 +1244,67 @@ class Main(QMainWindow):
         # A-1-Dir Model:
         self.radiobtns_dirmodel = [
             self.ui.radioButton_Media_Video_DirModel_VSX,
-            self.ui.radioButton_Media_Video_DirModel_MIP9k,
-            self.ui.radioButton_Media_Video_DirModel_NonSpectrum
+            self.ui.radioButton_Media_Video_DirModel_MIP9k
         ]
         self.btngroup_dirmodel = QButtonGroup()
         # A-2-Res:
         self.radiobtns_res = [
-            self.ui.radioButton_Media_Video_Res_HD1080i25,
-            self.ui.radioButton_Media_Video_Res_HD1080p50,
-            self.ui.radioButton_Media_Video_Res_UHD2160p50
+            self.ui.radioButton_Media_Video_Res_1080,
+            self.ui.radioButton_Media_Video_Res_2160,
+            self.ui.radioButton_Media_Video_Res_720
         ]
         self.btngroup_res = QButtonGroup()
-        # A-3-TCS:
+        # A-3-Scan Mode:
+        self.radiobtns_scanmode = [
+            self.ui.radioButton_Media_Video_ScanMode_Interlaced,
+            self.ui.radioButton_Media_Video_ScanMode_Progressive
+        ]
+        self.btngroup_scanmode = QButtonGroup()
+        # A-4-Tap Channel:
+        self.radiobtns_framerate = [
+            self.ui.radioButton_Media_Video_FrameRate_Upper,
+            self.ui.radioButton_Media_Video_FrameRate_Lower
+        ]
+        self.btngroup_framerate = QButtonGroup()
+        # A-5-TCS:
         self.radiobtns_tcs = [
             self.ui.radioButton_Media_Video_TCS_SDR,
             self.ui.radioButton_Media_Video_TCS_HLG,
             self.ui.radioButton_Media_Video_TCS_PQ
         ]
         self.btngroup_tcs = QButtonGroup()
-        # A-4-Sampling:
+        # A-6-Sampling:
         self.radiobtns_sampling = [
             self.ui.radioButton_Media_Video_Sampling_422,
             self.ui.radioButton_Media_Video_Sampling_420
         ]
         self.btngroup_sampling = QButtonGroup()
-        # A-5-Depth:
+        # A-7-Depth:
         self.radiobtns_depth = [
             self.ui.radioButton_Media_Video_Depth_8bit,
             self.ui.radioButton_Media_Video_Depth_10bit
         ]
         self.btngroup_depth = QButtonGroup()
-        # A-6-Colorimetry:
+        # A-8-Colorimetry:
         self.radiobtns_colorimetry = [
             self.ui.radioButton_Media_Video_Colorimetry_BT709,
             self.ui.radioButton_Media_Video_Colorimetry_BT2020
         ]
         self.btngroup_colorimetry = QButtonGroup()
-        # A-7-Packing Mode:
-        self.radiobtns_pm = [
+        # A-9-Packing Mode:
+        """self.radiobtns_pm = [
             self.ui.radioButton_Media_Video_PM_GPM,
             self.ui.radioButton_Media_Video_PM_BPM
         ]
+        """
         self.btngroup_pm = QButtonGroup()
-        # A-8-Channel Role:
+        # A-10-Channel Role:
         self.radiobtns_chnrole = [
             self.ui.radioButton_Channel_Role_Main,
             self.ui.radioButton_Channel_Role_Backup
         ]
         self.btngroup_chnrole = QButtonGroup()
-        # A-9-Tap Channel:
+        # A-11-Tap Channel:
         self.radiobtns_tapchn = [
             self.ui.radioButton_Tap_Channel_A,
             self.ui.radioButton_Tap_Channel_B
@@ -1262,6 +1312,9 @@ class Main(QMainWindow):
         self.btngroup_tapchn = QButtonGroup()
 
         # B-0-Slot for buttons
+        def slot_pushButton_ParsrOMDB_Clicked():
+            parseOMDB()
+
         def slot_pushButton_GenSDP_Clicked():
             configSDP()
 
@@ -1272,36 +1325,69 @@ class Main(QMainWindow):
         # B-1-Dir Model:
         def slot_radiobtn_clicked_dirmodel():
             global str_media_video_fmtp_value_tp
-            if self.btngroup_dirmodel.checkedId() == 0:
-                str_media_video_fmtp_value_tp = "2110TPN;"
-            elif self.btngroup_dirmodel.checkedId() == 1:
-                str_media_video_fmtp_value_tp = "2110TPW;"
-            else:
-                str_media_video_fmtp_value_tp = "2110TPW;"
+            str_media_video_fmtp_value_tp = "2110TPW;" if self.btngroup_dirmodel.checkedId() else "2110TPN;"
 
-        # B-2-Res&FR
+        # B-2-Resolution
         def slot_radiobtn_clicked_res():
             global str_media_video_fmtp_value_width
             global str_media_video_fmtp_value_height
-            global str_media_video_fmtp_value_exactframerate
-            global str_media_video_fmtp_value_interlace
             if self.btngroup_res.checkedId() == 0:
                 str_media_video_fmtp_value_width = "1920;"
                 str_media_video_fmtp_value_height = "1080;"
-                str_media_video_fmtp_value_exactframerate = "25;"
-                str_media_video_fmtp_value_interlace = "interlace; "
+                self.ui.radioButton_Media_Video_ScanMode_Interlaced.setEnabled(True)
+                self.ui.radioButton_Media_Video_ScanMode_Progressive.setEnabled(True)
+                slot_radiobtn_clicked_scanmode()
+                slot_radiobtn_clicked_framerate()
             elif self.btngroup_res.checkedId() == 1:
-                str_media_video_fmtp_value_width = "1920;"
-                str_media_video_fmtp_value_height = "1080;"
-                str_media_video_fmtp_value_exactframerate = "50;"
-                str_media_video_fmtp_value_interlace = ""
-            elif self.btngroup_res.checkedId() == 2:
                 str_media_video_fmtp_value_width = "3840;"
                 str_media_video_fmtp_value_height = "2160;"
-                str_media_video_fmtp_value_exactframerate = "50;"
-                str_media_video_fmtp_value_interlace = ""
+                self.ui.radioButton_Media_Video_ScanMode_Interlaced.setDisabled(True)
+                self.ui.radioButton_Media_Video_ScanMode_Progressive.setEnabled(True)
+                self.ui.radioButton_Media_Video_ScanMode_Progressive.setChecked(True)
+                self.ui.radioButton_Media_Video_FrameRate_Upper.setText("50")
+                self.ui.radioButton_Media_Video_FrameRate_Lower.setText("59.94")
+                slot_radiobtn_clicked_scanmode()
+                slot_radiobtn_clicked_framerate()
+            elif self.btngroup_res.checkedId() == 2:
+                str_media_video_fmtp_value_width = "1280;"
+                str_media_video_fmtp_value_height = "720;"
+                self.ui.radioButton_Media_Video_ScanMode_Interlaced.setDisabled(True)
+                self.ui.radioButton_Media_Video_ScanMode_Progressive.setEnabled(True)
+                self.ui.radioButton_Media_Video_ScanMode_Progressive.setChecked(True)
+                self.ui.radioButton_Media_Video_FrameRate_Upper.setText("50")
+                self.ui.radioButton_Media_Video_FrameRate_Lower.setText("59.94")
+                slot_radiobtn_clicked_scanmode()
+                slot_radiobtn_clicked_framerate()
 
-        # B-3-TCS:
+        # B-3-Scan Mode
+        def slot_radiobtn_clicked_scanmode():
+            global str_media_video_fmtp_value_interlace
+            if self.btngroup_scanmode.checkedId() == 0:
+                str_media_video_fmtp_value_interlace = "interlace; "
+                self.ui.radioButton_Media_Video_FrameRate_Upper.setText("25")
+                self.ui.radioButton_Media_Video_FrameRate_Lower.setText("29.97")
+                slot_radiobtn_clicked_framerate()
+            else:
+                str_media_video_fmtp_value_interlace = ""
+                self.ui.radioButton_Media_Video_FrameRate_Upper.setText("50")
+                self.ui.radioButton_Media_Video_FrameRate_Lower.setText("59.94")
+                slot_radiobtn_clicked_framerate()
+
+        # B-4-FrameRate
+        def slot_radiobtn_clicked_framerate():
+            global str_media_video_fmtp_value_exactframerate
+            if self.btngroup_scanmode.checkedId() == 0:
+                if self.btngroup_framerate.checkedId() == 0:
+                    str_media_video_fmtp_value_exactframerate = "25;"
+                else:
+                    str_media_video_fmtp_value_exactframerate = "30000/1001;"
+            else:
+                if self.btngroup_framerate.checkedId() == 0:
+                    str_media_video_fmtp_value_exactframerate = "50;"
+                else:
+                    str_media_video_fmtp_value_exactframerate = "60000/1001;"
+
+        # B-5-TCS:
         def slot_radiobtn_clicked_tcs():
             global str_media_video_fmtp_value_tcs
             if self.btngroup_tcs.checkedId() == 0:
@@ -1311,7 +1397,7 @@ class Main(QMainWindow):
             elif self.btngroup_tcs.checkedId() == 2:
                 str_media_video_fmtp_value_tcs = "PQ;"
 
-        # B-4-sampling:
+        # B-6-sampling:
         def slot_radiobtn_clicked_sampling():
             global str_media_video_fmtp_value_sampling
             if self.btngroup_sampling.checkedId() == 0:
@@ -1319,7 +1405,7 @@ class Main(QMainWindow):
             elif self.btngroup_sampling.checkedId() == 1:
                 str_media_video_fmtp_value_sampling = "YCbCr-4:2:0;"
 
-        # B-5-depth:
+        # B-7-depth:
         def slot_radiobtn_clicked_depth():
             global str_media_video_fmtp_value_depth
             if self.btngroup_depth.checkedId() == 0:
@@ -1327,7 +1413,7 @@ class Main(QMainWindow):
             elif self.btngroup_depth.checkedId() == 1:
                 str_media_video_fmtp_value_depth = "10;"
 
-        # B-6-colorimetry:
+        # B-8-colorimetry:
         def slot_radiobtn_clicked_colorimetry():
             global str_media_video_fmtp_value_colorimetry
             if self.btngroup_colorimetry.checkedId() == 0:
@@ -1335,15 +1421,16 @@ class Main(QMainWindow):
             elif self.btngroup_depth.checkedId() == 1:
                 str_media_video_fmtp_value_colorimetry = "BT2020;"
 
-        # B-7-Packing Mode:
-        def slot_radiobtn_clicked_pm():
+        # B-9-Packing Mode:
+        """def slot_radiobtn_clicked_pm():
             global str_media_video_fmtp_value_pm
             if self.btngroup_pm.checkedId() == 0:
                 str_media_video_fmtp_value_pm = "2110GPM;"
             elif self.btngroup_depth.checkedId() == 1:
                 str_media_video_fmtp_value_pm = "2110BPM;"
+        """
 
-        # B-8-Channel Role:
+        # B-10-Channel Role:
         def slot_radiobtn_clicked_chnrole():
             global str_channel_role
             global str_channel_role_short
@@ -1367,7 +1454,7 @@ class Main(QMainWindow):
                 self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.ip_byte3.setText("240")
                 self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.ip_byte3.setText("240")
 
-        # B-9-Tap Channel:
+        # B-11-Tap Channel:
         def slot_radiobtn_clicked_tapchn():
             global str_tap_channel
             if self.btngroup_tapchn.checkedId() == 0:
@@ -1375,7 +1462,7 @@ class Main(QMainWindow):
             elif self.btngroup_tapchn.checkedId() == 1:
                 str_tap_channel = "B"
 
-        # B-10-Slots for (audio) combobox on index change
+        # B-12-Slots for (audio) combobox on index change
         def slot_combobox_indexchanged_audfmt_ch1and2():
             if not flag_is_slot_calling:
                 refresh_audio_combobox()
@@ -1413,40 +1500,50 @@ class Main(QMainWindow):
         for i in range(len(self.radiobtns_dirmodel)):
             self.btngroup_dirmodel.addButton(self.radiobtns_dirmodel[i], i)
             self.radiobtns_dirmodel[i].clicked.connect(slot_radiobtn_clicked_dirmodel)
-        # C-2-Res:
+        # C-2-Resolution:
         for i in range(len(self.radiobtns_res)):
             self.btngroup_res.addButton(self.radiobtns_res[i], i)
             self.radiobtns_res[i].clicked.connect(slot_radiobtn_clicked_res)
-        # C-3-TCS:
+        # C-3-Scan Mode:
+        for i in range(len(self.radiobtns_scanmode)):
+            self.btngroup_scanmode.addButton(self.radiobtns_scanmode[i], i)
+            self.radiobtns_scanmode[i].clicked.connect(slot_radiobtn_clicked_scanmode)
+        # C-4-Frame Rate:
+        for i in range(len(self.radiobtns_framerate)):
+            self.btngroup_framerate.addButton(self.radiobtns_framerate[i], i)
+            self.radiobtns_framerate[i].clicked.connect(slot_radiobtn_clicked_framerate)
+        # C-5-TCS:
         for i in range(len(self.radiobtns_tcs)):
             self.btngroup_tcs.addButton(self.radiobtns_tcs[i], i)
             self.radiobtns_tcs[i].clicked.connect(slot_radiobtn_clicked_tcs)
-        # C-4-Sampling:
+        # C-6-Sampling:
         for i in range(len(self.radiobtns_sampling)):
             self.btngroup_sampling.addButton(self.radiobtns_sampling[i], i)
             self.radiobtns_sampling[i].clicked.connect(slot_radiobtn_clicked_sampling)
-        # C-5-Depth:
+        # C-7-Depth:
         for i in range(len(self.radiobtns_depth)):
             self.btngroup_depth.addButton(self.radiobtns_depth[i], i)
             self.radiobtns_depth[i].clicked.connect(slot_radiobtn_clicked_depth)
-        # C-6-Colorimetry:
+        # C-8-Colorimetry:
         for i in range(len(self.radiobtns_colorimetry)):
             self.btngroup_colorimetry.addButton(self.radiobtns_colorimetry[i], i)
             self.radiobtns_colorimetry[i].clicked.connect(slot_radiobtn_clicked_colorimetry)
-        # C-7-Packing Mode:
-        for i in range(len(self.radiobtns_pm)):
+        # C-9-Packing Mode:
+        """for i in range(len(self.radiobtns_pm)):
             self.btngroup_pm.addButton(self.radiobtns_pm[i], i)
             self.radiobtns_pm[i].clicked.connect(slot_radiobtn_clicked_pm)
-        # C-8-Channel Role:
+        """
+        # C-10-Channel Role:
         for i in range(len(self.radiobtns_chnrole)):
             self.btngroup_chnrole.addButton(self.radiobtns_chnrole[i], i)
             self.radiobtns_chnrole[i].clicked.connect(slot_radiobtn_clicked_chnrole)
-        # C-9-Tap Channel:
+        # C-11-Tap Channel:
         for i in range(len(self.radiobtns_tapchn)):
             self.btngroup_tapchn.addButton(self.radiobtns_tapchn[i], i)
             self.radiobtns_tapchn[i].clicked.connect(slot_radiobtn_clicked_tapchn)
 
-        # C-10 single object
+        # C-12 single object
+        self.ui.pushButton_ParseOMDB.clicked.connect(slot_pushButton_ParsrOMDB_Clicked)
         self.ui.pushButton_GenSDP.clicked.connect(slot_pushButton_GenSDP_Clicked)
         self.ui.pushButton_SavetoFile.clicked.connect(slot_pushButton_SavetoFile_Clicked)
         self.ui.checkBox_Sess_Generate_ID.clicked.connect(slot_checkBox_Sess_Generate_ID_Clicked)
@@ -1474,7 +1571,7 @@ class Main(QMainWindow):
         slot_radiobtn_clicked_sampling()
         slot_radiobtn_clicked_depth()
         slot_radiobtn_clicked_colorimetry()
-        slot_radiobtn_clicked_pm()
+        # slot_radiobtn_clicked_pm()
         slot_radiobtn_clicked_chnrole()
         slot_radiobtn_clicked_tapchn()
         slot_lineEdit_Channel_ID_Edited()
