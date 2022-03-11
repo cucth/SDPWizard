@@ -127,7 +127,6 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -189,7 +188,6 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -209,7 +207,6 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="acceptDrops">
@@ -244,7 +241,6 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -288,7 +284,6 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="autoFillBackground">
@@ -318,7 +313,6 @@
                 <property name="font">
                  <font>
                   <family>Arial</family>
-                  <pointsize>-1</pointsize>
                  </font>
                 </property>
                 <property name="styleSheet">
@@ -343,7 +337,6 @@
                 <property name="font">
                  <font>
                   <family>Arial</family>
-                  <pointsize>-1</pointsize>
                  </font>
                 </property>
                 <property name="styleSheet">
@@ -366,7 +359,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="5,18,3,8,11,15">
+          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="5,18,1,8,8,1,6,13">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -404,7 +397,6 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -427,6 +419,9 @@
                <property name="toolTipDuration">
                 <number>10000</number>
                </property>
+               <property name="styleSheet">
+                <string notr="true">font-family: Inconsolata; font-size: 14px</string>
+               </property>
                <property name="editable">
                 <bool>true</bool>
                </property>
@@ -435,6 +430,9 @@
                </property>
                <property name="maxCount">
                 <number>128</number>
+               </property>
+               <property name="insertPolicy">
+                <enum>QComboBox::NoInsert</enum>
                </property>
                <property name="modelColumn">
                 <number>0</number>
@@ -453,7 +451,6 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -475,32 +472,31 @@
               <widget class="QGroupBox" name="groupBox_Tap_Channel">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>110</horstretch>
+                 <horstretch>80</horstretch>
                  <verstretch>25</verstretch>
                 </sizepolicy>
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>110</width>
+                 <width>80</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>110</width>
+                 <width>80</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="baseSize">
                 <size>
-                 <width>110</width>
+                 <width>80</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="autoFillBackground">
@@ -515,7 +511,7 @@
                <widget class="QRadioButton" name="radioButton_Tap_Channel_A">
                 <property name="geometry">
                  <rect>
-                  <x>10</x>
+                  <x>5</x>
                   <y>1</y>
                   <width>41</width>
                   <height>20</height>
@@ -524,7 +520,6 @@
                 <property name="font">
                  <font>
                   <family>Arial</family>
-                  <pointsize>-1</pointsize>
                  </font>
                 </property>
                 <property name="styleSheet">
@@ -540,7 +535,7 @@
                <widget class="QRadioButton" name="radioButton_Tap_Channel_B">
                 <property name="geometry">
                  <rect>
-                  <x>60</x>
+                  <x>40</x>
                   <y>1</y>
                   <width>35</width>
                   <height>20</height>
@@ -549,7 +544,6 @@
                 <property name="font">
                  <font>
                   <family>Arial</family>
-                  <pointsize>-1</pointsize>
                  </font>
                 </property>
                 <property name="styleSheet">
@@ -568,6 +562,143 @@
            </item>
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_17"/>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_57">
+             <item>
+              <widget class="QLabel" name="label_Stream_Direction">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>60</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="baseSize">
+                <size>
+                 <width>60</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font-family: Arial; font-size: 13px</string>
+               </property>
+               <property name="text">
+                <string>Direction:</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_58">
+             <item>
+              <widget class="QGroupBox" name="groupBox_Channel_Direction">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>130</horstretch>
+                 <verstretch>25</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>130</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="baseSize">
+                <size>
+                 <width>130</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                </font>
+               </property>
+               <property name="autoFillBackground">
+                <bool>false</bool>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font-family: Arial; font-size: 13px</string>
+               </property>
+               <property name="title">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+               <property name="checkable">
+                <bool>false</bool>
+               </property>
+               <widget class="QRadioButton" name="radioButton_Channel_Direction_Send">
+                <property name="geometry">
+                 <rect>
+                  <x>10</x>
+                  <y>1</y>
+                  <width>51</width>
+                  <height>20</height>
+                 </rect>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>Arial</family>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
+                <property name="text">
+                 <string>Send</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+               <widget class="QRadioButton" name="radioButton_Channel_Direction_Recv">
+                <property name="geometry">
+                 <rect>
+                  <x>70</x>
+                  <y>1</y>
+                  <width>56</width>
+                  <height>20</height>
+                 </rect>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>Arial</family>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
+                <property name="text">
+                 <string>Recv</string>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </item>
@@ -673,7 +804,6 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="focusPolicy">
@@ -714,7 +844,6 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -814,7 +943,6 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -849,7 +977,6 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -954,7 +1081,6 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -1038,7 +1164,6 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -1104,7 +1229,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1136,7 +1260,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1162,7 +1285,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1226,7 +1348,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1258,7 +1379,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1316,7 +1436,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1345,7 +1464,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1409,7 +1527,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1435,7 +1552,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1461,7 +1577,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1538,7 +1653,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1564,7 +1678,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1634,7 +1747,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="autoFillBackground">
@@ -1681,7 +1793,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1751,7 +1862,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1777,7 +1887,6 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
-                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -2075,7 +2184,6 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -2861,7 +2969,6 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
-                 <pointsize>-1</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -3102,7 +3209,6 @@
          <property name="font">
           <font>
            <family>Arial</family>
-           <pointsize>-1</pointsize>
            <weight>75</weight>
            <bold>true</bold>
           </font>
@@ -3141,7 +3247,6 @@
          <property name="font">
           <font>
            <family>Arial</family>
-           <pointsize>-1</pointsize>
           </font>
          </property>
          <property name="autoFillBackground">
@@ -3196,7 +3301,6 @@
            <property name="font">
             <font>
              <family>Inconsolata</family>
-             <pointsize>-1</pointsize>
             </font>
            </property>
            <property name="autoFillBackground">
@@ -3253,7 +3357,6 @@
            <property name="font">
             <font>
              <family>Inconsolata</family>
-             <pointsize>-1</pointsize>
             </font>
            </property>
            <property name="autoFillBackground">
@@ -3310,7 +3413,6 @@
            <property name="font">
             <font>
              <family>Inconsolata</family>
-             <pointsize>-1</pointsize>
             </font>
            </property>
            <property name="autoFillBackground">
@@ -3367,7 +3469,6 @@
            <property name="font">
             <font>
              <family>Inconsolata</family>
-             <pointsize>-1</pointsize>
             </font>
            </property>
            <property name="autoFillBackground">
