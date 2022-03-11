@@ -1,3 +1,0 @@
-([('main',
-   '/Users/charles/Workspace/PyCharmProjects/SDPWizard/dist/main',
-   'EXECUTABLE')],)
