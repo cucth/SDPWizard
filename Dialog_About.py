@@ -95,5 +95,5 @@ class Ui_Dlg_About(object):
         self.label_4.setText(_translate("Dlg_About", "For Spectrum only, other usages are not verified."))
         self.label_5.setText(_translate("Dlg_About", "Make sure take manual review carefully!"))
         self.label_6.setText(_translate("Dlg_About", "Report bugs to Charles.Sun@harmonicinc.com"))
-        self.label_ver.setText(_translate("Dlg_About", "Ver. 0.2 Alpha"))
+        self.label_ver.setText(_translate("Dlg_About", "Ver. 0.5 Beta"))
 import resource_rc

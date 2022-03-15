@@ -3,7 +3,7 @@ import sys
 import os
 from datetime import datetime
 from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, \
-    QWidget, QFileDialog, QMessageBox, QAction, QDialog
+    QWidget, QFileDialog, QMessageBox, QAction, QDialog, QSizePolicy
 from PyQt5 import QtCore
 from lxml import etree
 import SDPW_MainWindow
@@ -12,8 +12,19 @@ import IP4Edit
 
 DEFINE_NBSP = " "
 DEFINE_MY_NAME = "SDP Wizard (for Spectrum)"
-DEFINE_MY_VERSION = "0.4-beta"
+DEFINE_MY_VERSION = "0.5-Beta"
 DEFINE_MY_AUTHOR = "CharlesSun@HarmonicInc(2022)"
+
+DEFINE_STYLESHEET_CODESTYLE_LISTWIDGET_WIN = \
+    "alternate-background-color: #DEEAF6; font-family: Consolas; font-size: 15px"
+DEFINE_STYLESHEET_CODESTYLE_LISTWIDGET_MACOS = \
+    "alternate-background-color: #DEEAF6; font-family: Menlo; font-size: 14px"
+DEFINE_STYLESHEET_CODESTYLE_COMBOBOX_WIN = "font-family: Consolas; font-size: 15px"
+DEFINE_STYLESHEET_CODESTYLE_COMBOBOX_MACOS = "font-family: Menlo; font-size: 12px"
+DEFINE_STYLESHEET_CODESTYLE_LINEEDIT_WIN = "font-family: Consolas; font-size: 12px"
+DEFINE_STYLESHEET_CODESTYLE_LINEEDIT_MACOS = "font-family: Menlo; font-size: 12px"
+DEFINE_LABEL_DIRECTION_SEND = "Destination:"
+DEFINE_LABEL_DIRECTION_RECV = "Source:"
 
 DEFINE_SDPTYPE_PROTO_VER: str = "v="
 DEFINE_SDPTYPE_ORIGIN: str = "o="
@@ -188,6 +199,21 @@ file_omdb_original: _io.TextIOWrapper
 file_omdb_target: _io.TextIOWrapper
 list_str_tap: list[str] = []
 list_str_tapfamily: list[str] = []
+str_lable_direction: str = ""
+str_tooltip_multicast_addr: str = "Example Multicast Address:\n" \
+                                  "239.210.120.011\n" \
+                                  "    ┆┆┆ ┆┆┆ ┆┆└┈Stream ID in channel: 1:first, 2: second(in 2022-7 group)\n" \
+                                  "    ┆┆┆ ┆┆┆ └┴┈┈Channel ID\n" \
+                                  "    ┆┆┆ ┆└┴┈┈┈┈┈Stream type: 20:video(ST 2110-20), 30:audio, 40:ANC\n" \
+                                  "    ┆┆┆ └┈┈┈┈┈┈┈Channel role: 1: Main, 2: Backup\n" \
+                                  "    └┴┴┈┈┈┈┈┈┈┈┈Protocol: 210:ST2110, 217:ST2110 with 2022-7\n"
+str_tooltip_multicast_port: str = "Example Multicast Port:\n" \
+                                  "45481\n" \
+                                  "┆┆┆┆└┈Stream ID in channel: 1:first 2: second(in 2022-7 group)\n" \
+                                  "└┴┴┴┈┈For \"HLIT\""
+str_stylesheet_codestyle_listwidget: str = ""
+str_stylesheet_codestyle_combobox: str = ""
+str_stylesheet_codestyle_lineedit: str = ""
 
 
 def display_alarm(set_focus_QWidget=None, str_alarm=""):
@@ -228,6 +254,7 @@ def parseOMDB() -> bool:
             if file_omdb_target:
                 file_omdb_target.close()
     else:
+        MainWindow.ui.comboBox_Tap_ID.clear()
         display_alarm(None, "Open OMDB file failed. Please try again, or enter Tap ID manually.")
         return False
 
@@ -901,8 +928,10 @@ def configSDP() -> bool:
     # Generate SDP preview
     # Video SDP
     MainWindow.ui.listWidget_SDPPreview_Video.clear()
-    MainWindow.ui.listWidget_SDPPreview_Video.setStyleSheet(
-        "alternate-background-color: #DEEAF6; font-family: Inconsolata; font-size: 15px")
+    if os.name == "posix":
+        MainWindow.ui.listWidget_SDPPreview_Video.setStyleSheet(DEFINE_STYLESHEET_CODESTYLE_LISTWIDGET_MACOS)
+    elif os.name == "nt":
+        MainWindow.ui.listWidget_SDPPreview_Video.setStyleSheet(DEFINE_STYLESHEET_CODESTYLE_LISTWIDGET_WIN)
     MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_proto_ver)
     MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_sess_origin)
     MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_sess_name_video)
@@ -1160,67 +1189,132 @@ class About(QDialog):
 
 class Main(QMainWindow):
     def __init__(self, parent=None):
+        global str_stylesheet_codestyle_listwidget
+        global str_stylesheet_codestyle_combobox
+        global str_stylesheet_codestyle_lineedit
         super().__init__(parent)
         self.ui = SDPW_MainWindow.Ui_Main()
         self.ui.setupUi(self)
-
         self.about_action = QAction("About", self)
 
-        self.menubar = self.menuBar()
-        self.about_menu = self.menubar.addMenu("About")
-        self.about_menu.addAction(self.about_action)
+        if os.name == "posix":
+            self.menubar = self.menuBar()
+            self.about_menu = self.menubar.addMenu("About")
+            self.about_menu.addAction(self.about_action)
+            str_stylesheet_codestyle_listwidget = DEFINE_STYLESHEET_CODESTYLE_LISTWIDGET_MACOS
+            str_stylesheet_codestyle_combobox = DEFINE_STYLESHEET_CODESTYLE_COMBOBOX_MACOS
+            str_stylesheet_codestyle_lineedit = DEFINE_STYLESHEET_CODESTYLE_LINEEDIT_MACOS
+        elif os.name == "nt":
+            str_stylesheet_codestyle_listwidget = DEFINE_STYLESHEET_CODESTYLE_LISTWIDGET_WIN
+            str_stylesheet_codestyle_combobox = DEFINE_STYLESHEET_CODESTYLE_COMBOBOX_WIN
+            str_stylesheet_codestyle_lineedit = DEFINE_STYLESHEET_CODESTYLE_LINEEDIT_WIN
+
+        self.ui.listWidget_SDPPreview_Video.setStyleSheet(str_stylesheet_codestyle_listwidget)
+        self.ui.listWidget_SDPPreview_Audio.setStyleSheet(str_stylesheet_codestyle_listwidget)
+        self.ui.listWidget_SDPPreview_ANC.setStyleSheet(str_stylesheet_codestyle_listwidget)
+        self.ui.listWidget_SDPPreview_SDPS.setStyleSheet(str_stylesheet_codestyle_listwidget)
+        self.ui.comboBox_Tap_ID.setStyleSheet(str_stylesheet_codestyle_combobox)
 
         self.ui.ip4Edit_origin_IpAddr = IP4Edit.Ip4Edit(self.ui.horizontalLayoutWidget)
+        _sizepolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        _sizepolicy.setHorizontalStretch(0)
+        _sizepolicy.setVerticalStretch(0)
+        _sizepolicy.setHeightForWidth(self.ui.ip4Edit_origin_IpAddr.sizePolicy().hasHeightForWidth())
+        self.ui.ip4Edit_origin_IpAddr.setSizePolicy(_sizepolicy)
+        self.ui.ip4Edit_origin_IpAddr.setMinimumSize(QtCore.QSize(121, 21))
+        self.ui.ip4Edit_origin_IpAddr.setMaximumSize(QtCore.QSize(121, 21))
+        self.ui.ip4Edit_origin_IpAddr.setBaseSize(QtCore.QSize(121, 21))
+        self.ui.ip4Edit_origin_IpAddr.setAcceptDrops(False)
+        self.ui.ip4Edit_origin_IpAddr.setStyleSheet(str_stylesheet_codestyle_lineedit)
+        self.ui.ip4Edit_origin_IpAddr.setAlignment(QtCore.Qt.AlignCenter)
         self.ui.verticalLayout_28.addWidget(self.ui.ip4Edit_origin_IpAddr)
 
         self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_Video)
+        self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.setStyleSheet(str_stylesheet_codestyle_lineedit)
         self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(10, 50, 121, 21))
         self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+        self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.setToolTip(str_tooltip_multicast_addr)
+        self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.setToolTipDuration(100000)
         self.ui.ip4Edit_Media_Video_First_Dest_Mcast_Addr.ip_byte1.setText("239")
 
         self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_Video)
+        self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.setStyleSheet(str_stylesheet_codestyle_lineedit)
         self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(10, 100, 121, 21))
         self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+        self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.setToolTip(str_tooltip_multicast_addr)
+        self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.setToolTipDuration(100000)
         self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.ip_byte1.setText("239")
 
         self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_Audio)
+        self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.setStyleSheet(str_stylesheet_codestyle_lineedit)
         self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(10, 50, 121, 21))
         self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+        self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.setToolTip(str_tooltip_multicast_addr)
+        self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.setToolTipDuration(100000)
         self.ui.ip4Edit_Media_Audio_First_Dest_Mcast_Addr.ip_byte1.setText("239")
 
         self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_Audio)
+        self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.setStyleSheet(str_stylesheet_codestyle_lineedit)
         self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(10, 100, 121, 21))
         self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+        self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.setToolTip(str_tooltip_multicast_addr)
+        self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.setToolTipDuration(100000)
         self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.ip_byte1.setText("239")
 
         self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_ANC)
+        self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.setStyleSheet(str_stylesheet_codestyle_lineedit)
         self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.setGeometry(QtCore.QRect(10, 40, 121, 21))
         self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+        self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.setToolTip(str_tooltip_multicast_addr)
+        self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.setToolTipDuration(100000)
         self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.ip_byte1.setText("239")
 
         self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr = IP4Edit.Ip4Edit(self.ui.groupBox_Dest_ANC)
+        self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.setStyleSheet(str_stylesheet_codestyle_lineedit)
         self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.setGeometry(QtCore.QRect(230, 40, 121, 21))
         self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.setAlignment(QtCore.Qt.AlignCenter)
+        self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.setToolTip(str_tooltip_multicast_addr)
+        self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.setToolTipDuration(100000)
         self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.ip_byte1.setText("239")
 
-        """        validator_int_ttl = QIntValidator(0, 255, self)
-        self.ui.lineEdit_Media_Conn_TTL.setValidator(validator_int_ttl)
-        self.setLayout(self.ui.horizontalLayout_TTL)"""
+        self.ui.lineEdit_Media_Video_First_Dest_Mcast_Port.setStyleSheet(str_stylesheet_codestyle_lineedit)
+        self.ui.lineEdit_Media_Video_Second_Dest_Mcast_Port.setStyleSheet(str_stylesheet_codestyle_lineedit)
+        self.ui.lineEdit_Media_Audio_First_Dest_Mcast_Port.setStyleSheet(str_stylesheet_codestyle_lineedit)
+        self.ui.lineEdit_Media_Audio_Second_Dest_Mcast_Port.setStyleSheet(str_stylesheet_codestyle_lineedit)
+        self.ui.lineEdit_Media_ANC_First_Dest_Mcast_Port.setStyleSheet(str_stylesheet_codestyle_lineedit)
+        self.ui.lineEdit_Media_ANC_Second_Dest_Mcast_Port.setStyleSheet(str_stylesheet_codestyle_lineedit)
+
+        self.ui.lineEdit_Media_Video_First_Dest_Mcast_Port.setToolTip(str_tooltip_multicast_port)
+        self.ui.lineEdit_Media_Video_Second_Dest_Mcast_Port.setToolTip(str_tooltip_multicast_port)
+        self.ui.lineEdit_Media_Audio_First_Dest_Mcast_Port.setToolTip(str_tooltip_multicast_port)
+        self.ui.lineEdit_Media_Audio_Second_Dest_Mcast_Port.setToolTip(str_tooltip_multicast_port)
+        self.ui.lineEdit_Media_ANC_First_Dest_Mcast_Port.setToolTip(str_tooltip_multicast_port)
+        self.ui.lineEdit_Media_ANC_Second_Dest_Mcast_Port.setToolTip(str_tooltip_multicast_port)
+
+        self.ui.lineEdit_Media_Video_First_Dest_Mcast_Port.setToolTipDuration(100000)
+        self.ui.lineEdit_Media_Video_Second_Dest_Mcast_Port.setToolTipDuration(100000)
+        self.ui.lineEdit_Media_Audio_First_Dest_Mcast_Port.setToolTipDuration(100000)
+        self.ui.lineEdit_Media_Audio_Second_Dest_Mcast_Port.setToolTipDuration(100000)
+        self.ui.lineEdit_Media_ANC_First_Dest_Mcast_Port.setToolTipDuration(100000)
+        self.ui.lineEdit_Media_ANC_Second_Dest_Mcast_Port.setToolTipDuration(100000)
 
         # slot for some widgets
         def slot_checkBox_Media_DUP_Clicked():
             if self.ui.checkBox_Media_DUP.isChecked():
-                self.ui.label_Media_Video_First_Dest.setText("First Destination:")
+                self.ui.label_Media_Video_First_Dest.setText("First " + str_lable_direction)
+                self.ui.label_Media_Video_Second_Dest.setText("Second " + str_lable_direction)
                 self.ui.label_Media_Video_Second_Dest.show()
                 self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.show()
                 self.ui.label_Media_Video_Second_Colon.show()
                 self.ui.lineEdit_Media_Video_Second_Dest_Mcast_Port.show()
-                self.ui.label_Media_Audio_First_Dest.setText("First Destination:")
+                self.ui.label_Media_Audio_First_Dest.setText("First " + str_lable_direction)
+                self.ui.label_Media_Audio_Second_Dest.setText("Second " + str_lable_direction)
                 self.ui.label_Media_Audio_Second_Dest.show()
                 self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.show()
                 self.ui.label_Media_Audio_Second_Colon.show()
                 self.ui.lineEdit_Media_Audio_Second_Dest_Mcast_Port.show()
-                self.ui.label_Media_ANC_First_Dest.setText("First Destination:")
+                self.ui.label_Media_ANC_First_Dest.setText("First " + str_lable_direction)
+                self.ui.label_Media_ANC_Second_Dest.setText("Second " + str_lable_direction)
                 self.ui.label_Media_ANC_Second_Dest.show()
                 self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.show()
                 self.ui.label_Media_ANC_Second_Colon.show()
@@ -1232,17 +1326,17 @@ class Main(QMainWindow):
                 self.ui.ip4Edit_Media_ANC_First_Dest_Mcast_Addr.ip_byte2.setText("217")
                 self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.ip_byte2.setText("217")
             else:
-                self.ui.label_Media_Video_First_Dest.setText("Destination:")
+                self.ui.label_Media_Video_First_Dest.setText(str_lable_direction)
                 self.ui.label_Media_Video_Second_Dest.hide()
                 self.ui.ip4Edit_Media_Video_Second_Dest_Mcast_Addr.hide()
                 self.ui.label_Media_Video_Second_Colon.hide()
                 self.ui.lineEdit_Media_Video_Second_Dest_Mcast_Port.hide()
-                self.ui.label_Media_Audio_First_Dest.setText("Destination:")
+                self.ui.label_Media_Audio_First_Dest.setText(str_lable_direction)
                 self.ui.label_Media_Audio_Second_Dest.hide()
                 self.ui.ip4Edit_Media_Audio_Second_Dest_Mcast_Addr.hide()
                 self.ui.label_Media_Audio_Second_Colon.hide()
                 self.ui.lineEdit_Media_Audio_Second_Dest_Mcast_Port.hide()
-                self.ui.label_Media_ANC_First_Dest.setText("Destination:")
+                self.ui.label_Media_ANC_First_Dest.setText(str_lable_direction)
                 self.ui.label_Media_ANC_Second_Dest.hide()
                 self.ui.ip4Edit_Media_ANC_Second_Dest_Mcast_Addr.hide()
                 self.ui.label_Media_ANC_Second_Colon.hide()
@@ -1536,16 +1630,26 @@ class Main(QMainWindow):
         def slot_radiobtn_clicked_direction():
             global str_media_direction
             global str_media_direction_for_sess_name
+            global str_lable_direction
             if self.btngroup_direction.checkedId() == 0:
                 str_media_direction = \
                     DEFINE_SDPTYPE_SESS_ATTR + \
                     DEFINE_SDPVALUE_MEDIA_DIRECTION_SENDONLY
                 str_media_direction_for_sess_name = "output from "
+                str_lable_direction = DEFINE_LABEL_DIRECTION_SEND
             elif self.btngroup_direction.checkedId() == 1:
                 str_media_direction = \
                     DEFINE_SDPTYPE_SESS_ATTR + \
                     DEFINE_SDPVALUE_MEDIA_DIRECTION_RECVONLY
                 str_media_direction_for_sess_name = "input to "
+                str_lable_direction = DEFINE_LABEL_DIRECTION_RECV
+
+            self.ui.label_Media_Video_First_Dest.setText("First " + str_lable_direction)
+            self.ui.label_Media_Audio_First_Dest.setText("First " + str_lable_direction)
+            self.ui.label_Media_ANC_First_Dest.setText("First " + str_lable_direction)
+            self.ui.label_Media_Video_Second_Dest.setText("Second " + str_lable_direction)
+            self.ui.label_Media_Audio_Second_Dest.setText("Second " + str_lable_direction)
+            self.ui.label_Media_ANC_Second_Dest.setText("Second " + str_lable_direction)
 
         # B-13-Slots for (audio) combobox on index change
         def slot_combobox_indexchanged_audfmt_ch1and2():
@@ -1673,7 +1777,8 @@ class Main(QMainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     MainWindow = Main()
-    about_dlg = About()
-    MainWindow.about_action.triggered.connect(about_dlg.show)
+    if os.name == "posix":
+        about_dlg = About()
+        MainWindow.about_action.triggered.connect(about_dlg.show)
     MainWindow.show()
     sys.exit(app.exec_())

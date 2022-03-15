@@ -190,7 +190,7 @@
     <string notr="true">font-family: Arial; font-size: 14px </string>
    </property>
    <property name="text">
-    <string>Ver. 0.2 Alpha</string>
+    <string>Ver. 0.4 Beta</string>
    </property>
   </widget>
  </widget>

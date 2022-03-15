@@ -50,7 +50,7 @@
       <x>-1</x>
       <y>0</y>
       <width>1282</width>
-      <height>656</height>
+      <height>664</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_all" stretch="61,64">
@@ -127,6 +127,7 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -147,7 +148,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="12,7,3,9,16,14">
+          <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="12,7,3,9,14,16">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -188,6 +189,7 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -204,9 +206,34 @@
             <layout class="QVBoxLayout" name="verticalLayout_21">
              <item>
               <widget class="QLineEdit" name="lineEdit_Channel_ID">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>67</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>67</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="baseSize">
+                <size>
+                 <width>67</width>
+                 <height>20</height>
+                </size>
+               </property>
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="acceptDrops">
@@ -241,6 +268,7 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -259,31 +287,32 @@
               <widget class="QGroupBox" name="groupBox_Channel_Role">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>160</horstretch>
+                 <horstretch>140</horstretch>
                  <verstretch>25</verstretch>
                 </sizepolicy>
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>160</width>
+                 <width>140</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>160</width>
+                 <width>140</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="baseSize">
                 <size>
-                 <width>160</width>
+                 <width>140</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="autoFillBackground">
@@ -313,10 +342,11 @@
                 <property name="font">
                  <font>
                   <family>Arial</family>
+                  <pointsize>-1</pointsize>
                  </font>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true"/>
+                 <string notr="true">QRadioButton::indicator {width: 15px; height: 15px} font-family: Arial; font-size: 13px</string>
                 </property>
                 <property name="text">
                  <string>Main</string>
@@ -328,7 +358,7 @@
                <widget class="QRadioButton" name="radioButton_Channel_Role_Backup">
                 <property name="geometry">
                  <rect>
-                  <x>87</x>
+                  <x>70</x>
                   <y>1</y>
                   <width>71</width>
                   <height>20</height>
@@ -337,10 +367,11 @@
                 <property name="font">
                  <font>
                   <family>Arial</family>
+                  <pointsize>-1</pointsize>
                  </font>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true"/>
+                 <string notr="true">QRadioButton::indicator {width: 15px; height: 15px} font-family: Arial; font-size: 13px</string>
                 </property>
                 <property name="text">
                  <string>Backup</string>
@@ -359,7 +390,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="5,18,1,8,8,1,6,13">
+          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="5,17,1,8,8,1,6,14">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -397,6 +428,7 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -413,6 +445,30 @@
             <layout class="QVBoxLayout" name="verticalLayout">
              <item>
               <widget class="QComboBox" name="comboBox_Tap_ID">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>175</width>
+                 <height>26</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>175</width>
+                 <height>26</height>
+                </size>
+               </property>
+               <property name="baseSize">
+                <size>
+                 <width>175</width>
+                 <height>26</height>
+                </size>
+               </property>
                <property name="toolTip">
                 <string>Enter or Select from drop-down list</string>
                </property>
@@ -420,7 +476,7 @@
                 <number>10000</number>
                </property>
                <property name="styleSheet">
-                <string notr="true">font-family: Inconsolata; font-size: 14px</string>
+                <string notr="true">font-family: Arial; font-size: 13px</string>
                </property>
                <property name="editable">
                 <bool>true</bool>
@@ -451,6 +507,7 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -497,6 +554,7 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="autoFillBackground">
@@ -520,10 +578,11 @@
                 <property name="font">
                  <font>
                   <family>Arial</family>
+                  <pointsize>-1</pointsize>
                  </font>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true"/>
+                 <string notr="true">QRadioButton::indicator {width: 15px; height: 15px} font-family: Arial; font-size: 13px</string>
                 </property>
                 <property name="text">
                  <string>A</string>
@@ -544,10 +603,11 @@
                 <property name="font">
                  <font>
                   <family>Arial</family>
+                  <pointsize>-1</pointsize>
                  </font>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true"/>
+                 <string notr="true">QRadioButton::indicator {width: 15px; height: 15px} font-family: Arial; font-size: 13px</string>
                 </property>
                 <property name="text">
                  <string>B</string>
@@ -588,6 +648,7 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -606,19 +667,19 @@
               <widget class="QGroupBox" name="groupBox_Channel_Direction">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>130</horstretch>
+                 <horstretch>140</horstretch>
                  <verstretch>25</verstretch>
                 </sizepolicy>
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>130</width>
+                 <width>140</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>130</width>
+                 <width>140</width>
                  <height>25</height>
                 </size>
                </property>
@@ -631,6 +692,7 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="autoFillBackground">
@@ -651,19 +713,20 @@
                <widget class="QRadioButton" name="radioButton_Channel_Direction_Send">
                 <property name="geometry">
                  <rect>
-                  <x>10</x>
+                  <x>5</x>
                   <y>1</y>
-                  <width>51</width>
+                  <width>59</width>
                   <height>20</height>
                  </rect>
                 </property>
                 <property name="font">
                  <font>
                   <family>Arial</family>
+                  <pointsize>-1</pointsize>
                  </font>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true"/>
+                 <string notr="true">QRadioButton::indicator {width: 15px; height: 15px} font-family: Arial; font-size: 13px</string>
                 </property>
                 <property name="text">
                  <string>Send</string>
@@ -684,10 +747,11 @@
                 <property name="font">
                  <font>
                   <family>Arial</family>
+                  <pointsize>-1</pointsize>
                  </font>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true"/>
+                 <string notr="true">QRadioButton::indicator {width: 15px; height: 15px} font-family: Arial; font-size: 13px</string>
                 </property>
                 <property name="text">
                  <string>Recv</string>
@@ -752,6 +816,30 @@
                <property name="enabled">
                 <bool>false</bool>
                </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>77</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>77</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="baseSize">
+                <size>
+                 <width>77</width>
+                 <height>20</height>
+                </size>
+               </property>
                <property name="focusPolicy">
                 <enum>Qt::ClickFocus</enum>
                </property>
@@ -801,9 +889,34 @@
                <property name="enabled">
                 <bool>false</bool>
                </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>77</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>77</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="baseSize">
+                <size>
+                 <width>77</width>
+                 <height>20</height>
+                </size>
+               </property>
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="focusPolicy">
@@ -844,6 +957,7 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -862,7 +976,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="25,12,4,4,3,13">
+          <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="25,14,1,4,4,1,12">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -905,7 +1019,14 @@
             </layout>
            </item>
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_28"/>
+            <layout class="QVBoxLayout" name="verticalLayout_28">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_53"/>
            </item>
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_25">
@@ -929,21 +1050,43 @@
              <item>
               <widget class="QLineEdit" name="lineEdit_Media_Conn_TTL">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="minimumSize">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="sizeIncrement">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="baseSize">
                 <size>
                  <width>40</width>
-                 <height>0</height>
+                 <height>20</height>
                 </size>
                </property>
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                 </font>
+               </property>
+               <property name="acceptDrops">
+                <bool>false</bool>
                </property>
                <property name="styleSheet">
                 <string notr="true">font-family: Arial; font-size: 13px</string>
@@ -977,6 +1120,7 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -992,7 +1136,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="13,17,3,8,4,16">
+          <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="13,17,2,8,4,17">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -1038,6 +1182,30 @@
             <layout class="QVBoxLayout" name="verticalLayout_37">
              <item>
               <widget class="QLineEdit" name="lineEdit_Sess_PTP_GMID">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>166</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>166</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="baseSize">
+                <size>
+                 <width>166</width>
+                 <height>20</height>
+                </size>
+               </property>
                <property name="styleSheet">
                 <string notr="true">font-family: Arial; font-size: 13px</string>
                </property>
@@ -1078,19 +1246,50 @@
             <layout class="QVBoxLayout" name="verticalLayout_38">
              <item>
               <widget class="QLineEdit" name="lineEdit_Sess_PTP_Domain">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="baseSize">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                 </font>
+               </property>
+               <property name="acceptDrops">
+                <bool>false</bool>
                </property>
                <property name="styleSheet">
                 <string notr="true">font-family: Arial; font-size: 13px</string>
                </property>
                <property name="inputMask">
-                <string>DDD;0</string>
+                <string/>
                </property>
                <property name="text">
                 <string>127</string>
+               </property>
+               <property name="maxLength">
+                <number>3</number>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -1164,6 +1363,7 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -1229,6 +1429,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1260,6 +1461,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1285,6 +1487,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1348,6 +1551,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1379,6 +1583,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1436,6 +1641,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1464,6 +1670,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1527,6 +1734,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1552,6 +1760,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1577,6 +1786,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1653,6 +1863,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1678,6 +1889,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1747,6 +1959,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="autoFillBackground">
@@ -1793,6 +2006,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1862,6 +2076,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1887,6 +2102,7 @@
                   <property name="font">
                    <font>
                     <family>Arial</family>
+                    <pointsize>-1</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1978,11 +2194,29 @@
           <layout class="QHBoxLayout" name="horizontalLayout_11">
            <item>
             <widget class="QGroupBox" name="groupBox_Dest_Video">
+             <property name="minimumSize">
+              <size>
+               <width>208</width>
+               <height>173</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>208</width>
+               <height>173</height>
+              </size>
+             </property>
+             <property name="baseSize">
+              <size>
+               <width>208</width>
+               <height>173</height>
+              </size>
+             </property>
              <property name="styleSheet">
               <string notr="true">font-family: Arial; font-size: 13px</string>
              </property>
              <property name="title">
-              <string>Video Dest. M'cast Addr.</string>
+              <string>Video Stream M'cast</string>
              </property>
              <widget class="QLabel" name="label_Media_Video_First_Dest">
               <property name="geometry">
@@ -2025,8 +2259,32 @@
                 <x>150</x>
                 <y>50</y>
                 <width>51</width>
-                <height>20</height>
+                <height>21</height>
                </rect>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>51</width>
+                <height>21</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>51</width>
+                <height>21</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>51</width>
+                <height>21</height>
+               </size>
               </property>
               <property name="acceptDrops">
                <bool>false</bool>
@@ -2075,8 +2333,32 @@
                 <x>150</x>
                 <y>100</y>
                 <width>51</width>
-                <height>20</height>
+                <height>21</height>
                </rect>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>51</width>
+                <height>21</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>51</width>
+                <height>21</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>51</width>
+                <height>21</height>
+               </size>
               </property>
               <property name="acceptDrops">
                <bool>false</bool>
@@ -2161,6 +2443,9 @@
            </property>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_22">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <item>
               <widget class="QLabel" name="label_Media_Audio">
                <property name="minimumSize">
@@ -2184,6 +2469,7 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -2199,13 +2485,25 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_23" stretch="6,15,6,8">
+            <layout class="QHBoxLayout" name="horizontalLayout_23" stretch="5,12,7,8">
              <property name="spacing">
+              <number>10</number>
+             </property>
+             <property name="topMargin">
               <number>0</number>
              </property>
+             <property name="bottomMargin">
+              <number>5</number>
+             </property>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_9">
+              <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1,1,1,1,1">
                <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
                 <number>0</number>
                </property>
                <item>
@@ -2232,7 +2530,7 @@
                   <string notr="true">font-family: Arial; font-size: 13px</string>
                  </property>
                  <property name="text">
-                  <string>Channel</string>
+                  <string/>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -2244,19 +2542,19 @@
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
-                   <height>26</height>
+                   <height>21</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>26</height>
+                   <height>21</height>
                   </size>
                  </property>
                  <property name="baseSize">
                   <size>
                    <width>0</width>
-                   <height>26</height>
+                   <height>21</height>
                   </size>
                  </property>
                  <property name="styleSheet">
@@ -2275,19 +2573,19 @@
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
-                   <height>26</height>
+                   <height>21</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>26</height>
+                   <height>21</height>
                   </size>
                  </property>
                  <property name="baseSize">
                   <size>
                    <width>0</width>
-                   <height>26</height>
+                   <height>21</height>
                   </size>
                  </property>
                  <property name="styleSheet">
@@ -2306,19 +2604,19 @@
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
-                   <height>26</height>
+                   <height>21</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>26</height>
+                   <height>21</height>
                   </size>
                  </property>
                  <property name="baseSize">
                   <size>
                    <width>0</width>
-                   <height>26</height>
+                   <height>21</height>
                   </size>
                  </property>
                  <property name="styleSheet">
@@ -2340,19 +2638,19 @@
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
-                   <height>26</height>
+                   <height>21</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>26</height>
+                   <height>21</height>
                   </size>
                  </property>
                  <property name="baseSize">
                   <size>
                    <width>0</width>
-                   <height>26</height>
+                   <height>21</height>
                   </size>
                  </property>
                  <property name="styleSheet">
@@ -2369,9 +2667,9 @@
               </layout>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_10">
+              <layout class="QVBoxLayout" name="verticalLayout_10" stretch="1,1,1,1,1">
                <property name="spacing">
-                <number>0</number>
+                <number>5</number>
                </property>
                <item>
                 <widget class="QLabel" name="label_audio_ch1and2_3">
@@ -2406,6 +2704,30 @@
                </item>
                <item>
                 <widget class="QComboBox" name="comboBox_Audio_Format_Ch1and2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>125</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>125</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>125</width>
+                   <height>24</height>
+                  </size>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-family: Arial; font-size: 13px</string>
                  </property>
@@ -2439,6 +2761,30 @@
                </item>
                <item>
                 <widget class="QComboBox" name="comboBox_Audio_Format_Ch3and4">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>125</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>125</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>125</width>
+                   <height>24</height>
+                  </size>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-family: Arial; font-size: 13px</string>
                  </property>
@@ -2468,6 +2814,30 @@
                 <widget class="QComboBox" name="comboBox_Audio_Format_Ch5and6">
                  <property name="enabled">
                   <bool>false</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>125</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>125</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>125</width>
+                   <height>24</height>
+                  </size>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">font-family: Arial; font-size: 13px</string>
@@ -2499,6 +2869,30 @@
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>125</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>125</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>125</width>
+                   <height>24</height>
+                  </size>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-family: Arial; font-size: 13px</string>
                  </property>
@@ -2527,9 +2921,9 @@
               </layout>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_11">
+              <layout class="QVBoxLayout" name="verticalLayout_11" stretch="1,1,1,1,1">
                <property name="spacing">
-                <number>0</number>
+                <number>5</number>
                </property>
                <item>
                 <widget class="QLabel" name="label_audio_ch1and2_4">
@@ -2564,6 +2958,30 @@
                </item>
                <item>
                 <widget class="QComboBox" name="comboBox_Audio_Track_Qty_Ch1and2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-family: Arial; font-size: 13px</string>
                  </property>
@@ -2594,6 +3012,30 @@
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-family: Arial; font-size: 13px</string>
                  </property>
@@ -2603,6 +3045,30 @@
                 <widget class="QComboBox" name="comboBox_Audio_Track_Qty_Ch5and6">
                  <property name="enabled">
                   <bool>false</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">font-family: Arial; font-size: 13px</string>
@@ -2614,6 +3080,30 @@
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-family: Arial; font-size: 13px</string>
                  </property>
@@ -2622,9 +3112,9 @@
               </layout>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_12">
+              <layout class="QVBoxLayout" name="verticalLayout_12" stretch="1,1,1,1,1">
                <property name="spacing">
-                <number>0</number>
+                <number>5</number>
                </property>
                <item>
                 <widget class="QLabel" name="label_audio_ch1and2_5">
@@ -2653,12 +3143,36 @@
                   <string>Sample Size</string>
                  </property>
                  <property name="alignment">
-                  <set>Qt::AlignCenter</set>
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="QComboBox" name="comboBox_Audio_Sample_Size_Ch1and2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-family: Arial; font-size: 13px</string>
                  </property>
@@ -2686,6 +3200,30 @@
                 <widget class="QComboBox" name="comboBox_Audio_Sample_Size_Ch3and4">
                  <property name="enabled">
                   <bool>false</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">font-family: Arial; font-size: 13px</string>
@@ -2715,6 +3253,30 @@
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-family: Arial; font-size: 13px</string>
                  </property>
@@ -2742,6 +3304,30 @@
                 <widget class="QComboBox" name="comboBox_Audio_Sample_Size_Ch7and8">
                  <property name="enabled">
                   <bool>false</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>75</width>
+                   <height>24</height>
+                  </size>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">font-family: Arial; font-size: 13px</string>
@@ -2776,11 +3362,29 @@
           <layout class="QHBoxLayout" name="horizontalLayout_10">
            <item>
             <widget class="QGroupBox" name="groupBox_Dest_Audio">
+             <property name="minimumSize">
+              <size>
+               <width>208</width>
+               <height>155</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>208</width>
+               <height>155</height>
+              </size>
+             </property>
+             <property name="baseSize">
+              <size>
+               <width>208</width>
+               <height>155</height>
+              </size>
+             </property>
              <property name="styleSheet">
               <string notr="true">font-family: Arial; font-size: 13px</string>
              </property>
              <property name="title">
-              <string>Audio Dest. M'cast Addr.</string>
+              <string>Audio Stream M'cast</string>
              </property>
              <widget class="QLineEdit" name="lineEdit_Media_Audio_First_Dest_Mcast_Port">
               <property name="geometry">
@@ -2788,8 +3392,32 @@
                 <x>150</x>
                 <y>50</y>
                 <width>51</width>
-                <height>20</height>
+                <height>21</height>
                </rect>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>51</width>
+                <height>21</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>51</width>
+                <height>21</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>51</width>
+                <height>21</height>
+               </size>
               </property>
               <property name="acceptDrops">
                <bool>false</bool>
@@ -2838,8 +3466,32 @@
                 <x>150</x>
                 <y>100</y>
                 <width>51</width>
-                <height>20</height>
+                <height>21</height>
                </rect>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>51</width>
+                <height>21</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>51</width>
+                <height>21</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>51</width>
+                <height>21</height>
+               </size>
               </property>
               <property name="acceptDrops">
                <bool>false</bool>
@@ -2969,6 +3621,7 @@
                <property name="font">
                 <font>
                  <family>Arial</family>
+                 <pointsize>-1</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -2997,7 +3650,7 @@
                 <string notr="true">font-family: Arial; font-size: 13px</string>
                </property>
                <property name="title">
-                <string>ANC Data Dest. M'cast Addr.</string>
+                <string>ANC Data Stream M'cast</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -3024,8 +3677,32 @@
                   <x>150</x>
                   <y>40</y>
                   <width>51</width>
-                  <height>20</height>
+                  <height>21</height>
                  </rect>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>51</width>
+                  <height>21</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>51</width>
+                  <height>21</height>
+                 </size>
+                </property>
+                <property name="baseSize">
+                 <size>
+                  <width>51</width>
+                  <height>21</height>
+                 </size>
                 </property>
                 <property name="acceptDrops">
                  <bool>false</bool>
@@ -3112,8 +3789,32 @@
                   <x>370</x>
                   <y>40</y>
                   <width>51</width>
-                  <height>20</height>
+                  <height>21</height>
                  </rect>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>51</width>
+                  <height>21</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>51</width>
+                  <height>21</height>
+                 </size>
+                </property>
+                <property name="baseSize">
+                 <size>
+                  <width>51</width>
+                  <height>21</height>
+                 </size>
                 </property>
                 <property name="acceptDrops">
                  <bool>false</bool>
@@ -3209,6 +3910,7 @@
          <property name="font">
           <font>
            <family>Arial</family>
+           <pointsize>-1</pointsize>
            <weight>75</weight>
            <bold>true</bold>
           </font>
@@ -3247,6 +3949,7 @@
          <property name="font">
           <font>
            <family>Arial</family>
+           <pointsize>-1</pointsize>
           </font>
          </property>
          <property name="autoFillBackground">
@@ -3300,14 +4003,15 @@
            </property>
            <property name="font">
             <font>
-             <family>Inconsolata</family>
+             <family>Arial</family>
+             <pointsize>-1</pointsize>
             </font>
            </property>
            <property name="autoFillBackground">
             <bool>false</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">alternate-background-color: #DEEAF6; font-family: Inconsolata; font-size: 15px</string>
+            <string notr="true">alternate-background-color: #DEEAF6; font-family: Arial; font-size: 15px</string>
            </property>
            <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
@@ -3356,14 +4060,15 @@
            </property>
            <property name="font">
             <font>
-             <family>Inconsolata</family>
+             <family>Arial</family>
+             <pointsize>-1</pointsize>
             </font>
            </property>
            <property name="autoFillBackground">
             <bool>false</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">alternate-background-color: #DEEAF6; font-family: Inconsolata; font-size: 15px</string>
+            <string notr="true">alternate-background-color: #DEEAF6; font-family: Arial; font-size: 15px</string>
            </property>
            <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
@@ -3412,14 +4117,15 @@
            </property>
            <property name="font">
             <font>
-             <family>Inconsolata</family>
+             <family>Arial</family>
+             <pointsize>-1</pointsize>
             </font>
            </property>
            <property name="autoFillBackground">
             <bool>false</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">alternate-background-color: #DEEAF6; font-family: Inconsolata; font-size: 15px</string>
+            <string notr="true">alternate-background-color: #DEEAF6; font-family: Arial; font-size: 15px</string>
            </property>
            <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
@@ -3468,14 +4174,15 @@
            </property>
            <property name="font">
             <font>
-             <family>Inconsolata</family>
+             <family>Arial</family>
+             <pointsize>-1</pointsize>
             </font>
            </property>
            <property name="autoFillBackground">
             <bool>false</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">alternate-background-color: #DEEAF6; font-family: Inconsolata; font-size: 15px</string>
+            <string notr="true">alternate-background-color: #DEEAF6; font-family: Arial; font-size: 15px</string>
            </property>
            <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>

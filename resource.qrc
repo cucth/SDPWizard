@@ -1,6 +1,6 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
-<qresource>
-<file alias="SDPW.png">resource/SDPW.png</file>
-</qresource>
+<RCC>
+  <qresource>
+    <file>resource/Inconsolata.otf</file>
+    <file alias="SDPW.png">resource/SDPW.png</file>
+  </qresource>
 </RCC>

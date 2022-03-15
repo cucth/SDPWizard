@@ -1,6 +1,10 @@
 from PyQt5.QtGui import QIntValidator, QValidator, QRegExpValidator
 from PyQt5.QtCore import Qt, QMargins, QRegExp
 from PyQt5.QtWidgets import QLineEdit, QLabel, QWidget, QHBoxLayout
+import os
+
+DEFINE_STYLESHEET_CODESTYLE_LINEEDIT_WIN = "font-family: Consolas; font-size: 12px"
+DEFINE_STYLESHEET_CODESTYLE_LINEEDIT_MACOS = "font-family: Menlo; font-size: 12px"
 
 
 class IpByteEdit(QLineEdit):
@@ -11,7 +15,6 @@ class IpByteEdit(QLineEdit):
         self.setMaxLength(3)
         self.setFrame(False)
         self.setAlignment(Qt.AlignCenter)
-        self.setStyleSheet("font-family: Arial; font-size: 13px")
 
         validator = QIntValidator(0, 255, self)
         self.setValidator(validator)
@@ -55,6 +58,12 @@ class IpByteEdit(QLineEdit):
 
 class Ip4Edit(QLineEdit):
     def __init__(self, parent=None):
+        _str_stylesheet_codestyle_lineedit: str = ""
+        if os.name == "posix":
+            _str_stylesheet_codestyle_lineedit = DEFINE_STYLESHEET_CODESTYLE_LINEEDIT_MACOS
+        elif os.name == "nt":
+            _str_stylesheet_codestyle_lineedit = DEFINE_STYLESHEET_CODESTYLE_LINEEDIT_WIN
+
         QLineEdit.__init__(self, parent)
         self.setFocusPolicy(Qt.NoFocus)
 
@@ -62,10 +71,10 @@ class Ip4Edit(QLineEdit):
         self.ip_byte2 = IpByteEdit()
         self.ip_byte3 = IpByteEdit()
         self.ip_byte4 = IpByteEdit()
-        self.ip_byte1.setAlignment(Qt.AlignRight)
-        self.ip_byte2.setAlignment(Qt.AlignRight)
-        self.ip_byte3.setAlignment(Qt.AlignRight)
-        self.ip_byte4.setAlignment(Qt.AlignRight)
+        self.ip_byte1.setAlignment(Qt.AlignCenter)
+        self.ip_byte2.setAlignment(Qt.AlignCenter)
+        self.ip_byte3.setAlignment(Qt.AlignCenter)
+        self.ip_byte4.setAlignment(Qt.AlignCenter)
 
         self.labeldot1 = QLabel('.')
         self.labeldot2 = QLabel('.')
@@ -73,6 +82,8 @@ class Ip4Edit(QLineEdit):
         self.labeldot1.setAlignment(Qt.AlignCenter)
         self.labeldot2.setAlignment(Qt.AlignCenter)
         self.labeldot3.setAlignment(Qt.AlignCenter)
+
+        self.setElementStyleSheet(_str_stylesheet_codestyle_lineedit)
 
         layout = QHBoxLayout()
         layout.addWidget(self.ip_byte1, stretch=0, alignment=Qt.Alignment())
@@ -159,8 +170,11 @@ class Ip4Edit(QLineEdit):
 
         return "{}.{}.{}.{}".format(ipbyte1, ipbyte2, ipbyte3, ipbyte4)
 
-    def setStyleSheet(self, styleSheet):
+    def setElementStyleSheet(self, styleSheet):
         self.ip_byte1.setStyleSheet(styleSheet)
         self.ip_byte2.setStyleSheet(styleSheet)
         self.ip_byte3.setStyleSheet(styleSheet)
         self.ip_byte4.setStyleSheet(styleSheet)
+        self.labeldot1.setStyleSheet("font-family: Arial; font-size: 13px")
+        self.labeldot2.setStyleSheet("font-family: Arial; font-size: 13px")
+        self.labeldot3.setStyleSheet("font-family: Arial; font-size: 13px")
