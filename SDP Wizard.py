@@ -19,13 +19,14 @@ DEFINE_STYLESHEET_CODESTYLE_LISTWIDGET_WIN = \
     "alternate-background-color: #DEEAF6; font-family: Consolas; font-size: 15px"
 DEFINE_STYLESHEET_CODESTYLE_LISTWIDGET_MACOS = \
     "alternate-background-color: #DEEAF6; font-family: Menlo; font-size: 14px"
-DEFINE_STYLESHEET_CODESTYLE_COMBOBOX_WIN = "font-family: Consolas; font-size: 15px"
+DEFINE_STYLESHEET_CODESTYLE_COMBOBOX_WIN = "font-family: Consolas; font-size: 13px"
 DEFINE_STYLESHEET_CODESTYLE_COMBOBOX_MACOS = "font-family: Menlo; font-size: 12px"
 DEFINE_STYLESHEET_CODESTYLE_LINEEDIT_WIN = "font-family: Consolas; font-size: 12px"
 DEFINE_STYLESHEET_CODESTYLE_LINEEDIT_MACOS = "font-family: Menlo; font-size: 12px"
 DEFINE_LABEL_DIRECTION_SEND = "Destination:"
 DEFINE_LABEL_DIRECTION_RECV = "Source:"
-
+DEFINE_FILENAME_PREFIX_SEND = "Out_"
+DEFINE_FILENAME_PREFIX_RECV = "In_"
 DEFINE_SDPTYPE_PROTO_VER: str = "v="
 DEFINE_SDPTYPE_ORIGIN: str = "o="
 DEFINE_SDPTYPE_SESS_NAME: str = "s="
@@ -214,6 +215,7 @@ str_tooltip_multicast_port: str = "Example Multicast Port:\n" \
 str_stylesheet_codestyle_listwidget: str = ""
 str_stylesheet_codestyle_combobox: str = ""
 str_stylesheet_codestyle_lineedit: str = ""
+str_filename_prefix_direction: str = ""
 
 
 def display_alarm(set_focus_QWidget=None, str_alarm=""):
@@ -383,6 +385,12 @@ def configSDP() -> bool:
     str_origin_unicast_ipaddr = MainWindow.ui.ip4Edit_origin_IpAddr.text()
     str_channel_name = MainWindow.ui.lineEdit_Channel_ID.text()
     str_tap_id = MainWindow.ui.comboBox_Tap_ID.currentText()
+
+    if str_tap_id == "":
+        display_alarm(MainWindow.ui.comboBox_Tap_ID,
+                      "Tap ID is necessary. Enter \"00000\" or anything else if it's unknown.")
+        return False
+
     comboboxes_audio_format = [
         MainWindow.ui.comboBox_Audio_Format_Ch1and2,
         MainWindow.ui.comboBox_Audio_Format_Ch3and4,
@@ -508,28 +516,35 @@ def configSDP() -> bool:
         ", " + str_media_direction_for_sess_name + \
         "Tap_" + str_tap_id[0:5] + "-" + \
         str_tap_channel + str_tap_id[5:]
+
     # SDP file Name - Video, Audio, ANC
     str_filename_sdp_video = \
-        "OUT_Tap" + str_tap_id + str_tap_channel + \
+        str_filename_prefix_direction + "Tap" + \
+        str_tap_id + str_tap_channel[:5] + \
         "_CH-" + str_channel_name.upper() + \
         "-" + str_channel_role_short + \
         "_Video.sdp"
     str_filename_sdp_audio = \
-        "OUT_Tap" + str_tap_id + str_tap_channel + \
+        str_filename_prefix_direction + "Tap" + \
+        str_tap_id + str_tap_channel[:5] + \
         "_CH-" + str_channel_name.upper() + \
         "-" + str_channel_role_short + \
         "_Audio.sdp"
     str_filename_sdp_anc = \
-        "OUT_Tap" + str_tap_id + str_tap_channel + \
+        str_filename_prefix_direction + "Tap" + \
+        str_tap_id + str_tap_channel[:5] + \
         "_CH-" + str_channel_name.upper() + \
         "-" + str_channel_role_short + \
         "_ANC_Data.sdp"
     str_filename_sdps = \
-        "OUT_Tap" + str_tap_id + str_tap_channel + \
+        str_filename_prefix_direction + "Tap" + \
+        str_tap_id + str_tap_channel[:5] + \
         "_CH-" + str_channel_name.upper() + \
         "-" + str_channel_role_short + \
         ".sdps"
-    str_sub_path = "OUT_Tap" + str_tap_id + str_tap_channel
+    str_sub_path = \
+        str_filename_prefix_direction + "Tap" + \
+        str_tap_id[:5] + str_tap_channel
 
     # Session Information - Video, Audio, ANC
     str_sess_info_video = \
@@ -932,6 +947,7 @@ def configSDP() -> bool:
         MainWindow.ui.listWidget_SDPPreview_Video.setStyleSheet(DEFINE_STYLESHEET_CODESTYLE_LISTWIDGET_MACOS)
     elif os.name == "nt":
         MainWindow.ui.listWidget_SDPPreview_Video.setStyleSheet(DEFINE_STYLESHEET_CODESTYLE_LISTWIDGET_WIN)
+
     MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_proto_ver)
     MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_sess_origin)
     MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_sess_name_video)
@@ -965,6 +981,7 @@ def configSDP() -> bool:
     MainWindow.ui.listWidget_SDPPreview_Audio.addItem(str_sess_name_audio)
     MainWindow.ui.listWidget_SDPPreview_Audio.addItem(str_sess_info_audio)
     MainWindow.ui.listWidget_SDPPreview_Audio.addItem(str_sess_time)
+    MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_media_direction)
     if MainWindow.ui.checkBox_Media_DUP.isChecked():
         MainWindow.ui.listWidget_SDPPreview_Audio.addItem(str_sess_group)
     MainWindow.ui.listWidget_SDPPreview_Audio.addItem(str_sess_tool)
@@ -998,6 +1015,7 @@ def configSDP() -> bool:
     MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_sess_name_anc)
     MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_sess_info_anc)
     MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_sess_time)
+    MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_media_direction)
     if MainWindow.ui.checkBox_Media_DUP.isChecked():
         MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_sess_group)
     MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_sess_tool)
@@ -1045,7 +1063,7 @@ def savetoFile() -> bool:
 
     str_output_path = QFileDialog.getExistingDirectory(None, "Choose Output Directory", os.getcwd())
     os.chdir(str_output_path or os.getcwd())
-    str_sub_path = "Tap" + str_tap_id + str_tap_channel
+    str_sub_path = "Tap" + str_tap_id[:5] + str_tap_channel
 
     try:
         os.mkdir(str_sub_path)
@@ -1631,18 +1649,21 @@ class Main(QMainWindow):
             global str_media_direction
             global str_media_direction_for_sess_name
             global str_lable_direction
+            global str_filename_prefix_direction
             if self.btngroup_direction.checkedId() == 0:
                 str_media_direction = \
                     DEFINE_SDPTYPE_SESS_ATTR + \
                     DEFINE_SDPVALUE_MEDIA_DIRECTION_SENDONLY
                 str_media_direction_for_sess_name = "output from "
                 str_lable_direction = DEFINE_LABEL_DIRECTION_SEND
+                str_filename_prefix_direction = DEFINE_FILENAME_PREFIX_SEND
             elif self.btngroup_direction.checkedId() == 1:
                 str_media_direction = \
                     DEFINE_SDPTYPE_SESS_ATTR + \
                     DEFINE_SDPVALUE_MEDIA_DIRECTION_RECVONLY
                 str_media_direction_for_sess_name = "input to "
                 str_lable_direction = DEFINE_LABEL_DIRECTION_RECV
+                str_filename_prefix_direction = DEFINE_FILENAME_PREFIX_RECV
 
             self.ui.label_Media_Video_First_Dest.setText("First " + str_lable_direction)
             self.ui.label_Media_Audio_First_Dest.setText("First " + str_lable_direction)
