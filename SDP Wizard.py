@@ -981,7 +981,7 @@ def configSDP() -> bool:
     MainWindow.ui.listWidget_SDPPreview_Audio.addItem(str_sess_name_audio)
     MainWindow.ui.listWidget_SDPPreview_Audio.addItem(str_sess_info_audio)
     MainWindow.ui.listWidget_SDPPreview_Audio.addItem(str_sess_time)
-    MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_media_direction)
+    MainWindow.ui.listWidget_SDPPreview_Audio.addItem(str_media_direction)
     if MainWindow.ui.checkBox_Media_DUP.isChecked():
         MainWindow.ui.listWidget_SDPPreview_Audio.addItem(str_sess_group)
     MainWindow.ui.listWidget_SDPPreview_Audio.addItem(str_sess_tool)
@@ -1015,7 +1015,7 @@ def configSDP() -> bool:
     MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_sess_name_anc)
     MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_sess_info_anc)
     MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_sess_time)
-    MainWindow.ui.listWidget_SDPPreview_Video.addItem(str_media_direction)
+    MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_media_direction)
     if MainWindow.ui.checkBox_Media_DUP.isChecked():
         MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_sess_group)
     MainWindow.ui.listWidget_SDPPreview_ANC.addItem(str_sess_tool)
