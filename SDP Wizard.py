@@ -12,7 +12,7 @@ import IP4Edit
 
 DEFINE_NBSP = " "
 DEFINE_MY_NAME = "SDP Wizard (for Spectrum)"
-DEFINE_MY_VERSION = "0.5-Beta"
+DEFINE_MY_VERSION = "0.5.1-Beta"
 DEFINE_MY_AUTHOR = "CharlesSun@HarmonicInc(2022)"
 
 DEFINE_STYLESHEET_CODESTYLE_LISTWIDGET_WIN = \
@@ -639,9 +639,10 @@ def configSDP() -> bool:
         DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_RTPMAP + \
         DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_VIDEO + DEFINE_NBSP + \
         DEFINE_SDPVALUE_MEDIA_SUBTYPE_VIDEO + DEFINE_SDPVALUE_MEDIA_CLOCKRATE_VIDEO
-    str_media_video_fmtp_value_pm = "2110GPM"
+    str_media_video_fmtp_value_pm = "2110GPM;"
     str_media_fmtp_video = \
-        DEFINE_SDPTYPE_MEDIA_ATTR + DEFINE_SDPATTR_MEDIA_FMTP + \
+        DEFINE_SDPTYPE_MEDIA_ATTR + \
+        DEFINE_SDPATTR_MEDIA_FMTP + \
         DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_VIDEO + DEFINE_NBSP + \
         DEFINE_SDPPARAM_VIDEO_FMTP_SAMPLING + \
         str_media_video_fmtp_value_sampling + DEFINE_NBSP + \
@@ -664,7 +665,9 @@ def configSDP() -> bool:
         str_media_video_fmtp_value_tp + DEFINE_NBSP + \
         DEFINE_SDPPARAM_VIDEO_FMTP_TROFF + \
         DEFINE_SDPVALUE_FMTP_PARAM_TROFF + DEFINE_NBSP + \
-        DEFINE_SDPPARAM_VIDEO_FMTP_SSN + DEFINE_SDPVALUE_FMTP_PARAM_SSN
+        DEFINE_SDPPARAM_VIDEO_FMTP_SSN + \
+        DEFINE_SDPVALUE_FMTP_PARAM_SSN + \
+        DEFINE_NBSP
 
     # Audio (Sole, or first+second; incl. media desc, info, conn, rtpmap, fmtp)
     str_media_audio_dest_mcport_first = MainWindow.ui.lineEdit_Media_Audio_First_Dest_Mcast_Port.text()
@@ -805,7 +808,9 @@ def configSDP() -> bool:
         str_media_desc_anc_second = \
             DEFINE_SDPTYPE_MEDIA + DEFINE_SDPVALUE_MEDIA_TYPE_ANC + DEFINE_NBSP + \
             str_media_anc_dest_mcport_second + DEFINE_NBSP + \
-            DEFINE_SDPVALUE_MEDIA_PROTOCOL_ANC + DEFINE_NBSP
+            DEFINE_SDPVALUE_MEDIA_PROTOCOL_ANC + DEFINE_NBSP + \
+            DEFINE_SDPVALUE_MEDIA_RTPPAYLOAD_TYPE_ANC
+
         str_media_info_anc_first = \
             DEFINE_SDPTYPE_MEDIA_TITLE + "First ST 291 ANC Data Stream in 2022-7 Group. "
         str_media_info_anc_second = \
